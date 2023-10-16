@@ -4,9 +4,9 @@ import React, {useEffect, useState} from 'react';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import clsx from "clsx";
-import type {Product} from "@/data/listings/SingleAvailableForSale"
+import {Product} from "@/types/Product";
 
-import Slider from "react-slick";
+import Slider, {Settings} from "react-slick";
 
 type SingleAvailableForSaleSectionProps = {
     sectionTitle: string;
@@ -103,17 +103,17 @@ const SingleAvailableForSaleSection: React.FC<SingleAvailableForSaleSectionProps
 
     const products = productsList;
 
-    const settings = {
+    const settings: Settings = {
         dots: false,
         infinite: false,
         speed: 500,
         slidesToShow: slidesToShow,
         slidesToScroll: slidesToShow,
-        nextArrow: <CustomNextArrow hide={currentSlide >= products.length - PRODUCTS_PER_PAGE} />,
-        prevArrow: <CustomPrevArrow hide={currentSlide === 0} />,
-        lazyLoad: true,
+        nextArrow: <CustomNextArrow hide={currentSlide >= products.length - PRODUCTS_PER_PAGE} onClick={undefined}/>,
+        prevArrow: <CustomPrevArrow hide={currentSlide === 0} onClick={undefined}/>,
+        lazyLoad: "progressive",
         className: "slider variable-width",
-        beforeChange: (_, next) => setCurrentSlide(next)
+        beforeChange: (_: any, next: React.SetStateAction<number>) => setCurrentSlide(next)
     };
 
     return (
@@ -131,6 +131,7 @@ const SingleAvailableForSaleSection: React.FC<SingleAvailableForSaleSectionProps
                     {products.map((product, productIndex) => (
                         <div key={productIndex} className="px-1 group relative flex flex-col">
                             <div className="rounded-md bg-gray-200 aspect-square">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img
                                     src={product.imageSrc}
                                     alt={product.imageAlt}

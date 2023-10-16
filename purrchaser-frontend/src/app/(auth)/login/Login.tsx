@@ -2,38 +2,17 @@
 
 import React, {useEffect, useState} from "react";
 import Image from "next/image";
-import {XMarkIcon} from '@heroicons/react/24/outline'
-
-export interface UserInfo {
-    fullName: string;
-    schoolName: string;
-    email: string;
-    password: string;
-}
-
-const filterAndJoinClasses = (...classes: string[]) => {
-    return classes.filter(Boolean).join(' ')
-}
-
+import clsx from "clsx";
+import {UserInfo} from "@/types/UserInfo";
 
 const LogIn = () => {
-    // const navigate = useNavigate();
-
     const [loading, setLoading] = useState(false);
 
-    // const {isAuthenticated} = useSelector((state: RootState) => state.auth);
     const isAuthenticated = false;
 
     const [enteredEmail, setEnteredEmail] = useState("");
     const [enteredPassword, setEnteredPassword] = useState("");
     const [enableCreateAccountButton, setEnableCreateAccountButton] = useState(false);
-
-
-    // const dispatch = useDispatch<AppDispatch>();
-
-    useEffect(() => {
-        document.title = "TRiBE Log In | Sign In to TRiBE Account";
-    }, []);
 
     useEffect(() => {
         const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+$/;
@@ -61,20 +40,10 @@ const LogIn = () => {
 
         const userInfo: UserInfo = {
             fullName: "dummy_firstname",
-            schoolName: "dummy_schoolname",
+            schoolName: "dummy_school_name",
             email: enteredEmail,
             password: enteredPassword
         };
-
-        // dispatch(login(userInfo))
-        //     .unwrap()
-        //     .then(() => {
-        //         // console.log("User logged in successfully!");
-        //         // navigate("/");
-        //     })
-        //     .catch(() => {
-        //         setLoading(false);
-        //     });
 
         console.log("User logged in successfully!\nUser Info:", userInfo);
 
@@ -84,21 +53,32 @@ const LogIn = () => {
 
     if (isAuthenticated) {
         // console.log("User is already logged in. REDIRECTING TO HOME PAGE!");
-        // return <Navigate to={"/"} />;
         return;
     }
 
     return (
         <div className="pt-10 sm:pt-0 bg-white flex sm:min-h-full flex-row items-center ">
             <div className="relative items-center hidden lg:flex w-[40%] min-h-full">
-                <Image src="/assets/images/ND_Dome_Sketch.png" className="opacity-90 object-cover object-center"
-                       alt="Notre Dame football helmet raised up" fill={true} priority={true}/>
-                <Image src="/assets/images/HeroPattern.jpg" className="opacity-10 bg-slate-500 object-cover object-top" fill={true}
-                       alt="Dots pattern overlay"/>
+                <Image
+                    src="/assets/images/ND_Dome_Sketch.png"
+                    alt="Notre Dame football helmet raised up"
+                    className="opacity-90 object-cover object-center"
+                    fill={true}
+                    sizes="100%"
+                    placeholder="blur"
+                    blurDataURL={'/assets/images/ND_Dome_Sketch.png'}
+                />
+
+                <Image
+                    src="/assets/images/HeroPattern.jpg"
+                    alt="Dots pattern overlay"
+                    className="opacity-10 bg-slate-500 object-cover object-top"
+                    fill={true}
+                    sizes="100%"
+                />
             </div>
 
             <div className="bg-white flex flex-1 flex-col  min-h-full justify-center mb-12 py-5 sm:px-6 lg:px-8">
-
                 <div className="sm:mx-auto sm:w-full sm:max-w-md">
                     <h2 className="mt-6 text-center md:text-left text-2xl font-bold leading-9 tracking-tight text-gray-800">
                         Log in to PurrChaser
@@ -172,7 +152,7 @@ const LogIn = () => {
                                 <button
                                     type="submit"
                                     disabled={!enableCreateAccountButton || loading}
-                                    className={filterAndJoinClasses(
+                                    className={clsx(
                                         enableCreateAccountButton ? " bg-indigo-700 hover:bg-indigo-600" : " bg-gray-400 hover:bg-gray-400",
                                         "flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600")}
                                 >
@@ -220,7 +200,7 @@ const LogIn = () => {
                         </div>
 
                         <p className="mt-5 text-center text-sm text-gray-500">
-                            Don't have an account?{' '}
+                            Don&apos;t have an account?{' '}
                             <a href="/register" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
                                 Sign up
                             </a>

@@ -1,16 +1,9 @@
 "use client"
 
 import React, {useEffect, useState} from "react";
-import Link from "next/link";
 import Image from "next/image";
-import {XMarkIcon} from "@heroicons/react/24/outline";
-
-export interface UserInfo {
-    fullName: string;
-    schoolName: string;
-    email: string;
-    password: string;
-}
+import clsx from "clsx";
+import {UserInfo} from "@/types/UserInfo";
 
 interface ValidSchools {
     school_1: string;
@@ -26,14 +19,9 @@ const VALID_SCHOOLS = {
     "school_3": "University of Notre Dame"
 }
 
-const filterAndJoinClasses = (...classes: string[]) => {
-    return classes.filter(Boolean).join(' ')
-}
-
 const SignUp = () => {
     const [loading, setLoading] = useState(false);
 
-    // const {isAuthenticated} = useSelector((state: RootState) => state.auth);
     const isAuthenticated = false;
 
     const [enteredFullName, setEnteredFullName] = useState("");
@@ -41,9 +29,6 @@ const SignUp = () => {
     const [enteredEmail, setEnteredEmail] = useState("");
     const [enteredPassword, setEnteredPassword] = useState("");
     const [enableCreateAccountButton, setEnableCreateAccountButton] = useState(false);
-
-    // const navigate = useNavigate();
-    // const dispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {
         document.title = "TRiBE Sign Up | Create new TRiBE Account";
@@ -86,29 +71,14 @@ const SignUp = () => {
         event.preventDefault();
         setLoading(true);
 
-        // const userInfo = {
-        //     fullName: enteredFullName,
-        //     schoolName: VALID_SCHOOLS[selectedSchoolKey as SchoolKeys],
-        //     email: enteredEmail,
-        //     password: enteredPassword
-        // }
-
         const userInfo: UserInfo = {
             fullName: "dummy_firstname",
-            schoolName: "dummy_schoolname",
+            schoolName: "dummy_school_name",
             email: enteredEmail,
             password: enteredPassword
         };
 
-        // dispatch(register(userInfo))
-        //     .unwrap()
-        //     .then(() => {
-        //         // console.log("User registered successfully!");
-        //         navigate("/login");
-        //     })
-        //     .catch(() => {
-        //         setLoading(false);
-        //     });
+        console.log("User registered successfully!\nUser Info:", userInfo);
 
         setEnteredEmail("");
         setEnteredFullName("");
@@ -119,19 +89,30 @@ const SignUp = () => {
 
     if (isAuthenticated) {
         // console.log("User is already registered. REDIRECTING TO HOME PAGE!");
-        // return <Navigate to={"/login"} />;
         return;
     }
 
 
     return (
         <div className="pt-10 sm:pt-0 relative bg-white flex sm:min-h-full flex-row items-center ">
-
             <div className="relative items-center hidden lg:flex w-[40%] min-h-full">
-                <Image src="/assets/images/ND_Dome_Sketch.png" className="opacity-90 object-cover object-center"
-                       alt="Notre Dame football helmet raised up" fill={true} priority={true}/>
-                <Image src="/assets/images/HeroPattern.jpg" className="opacity-10 bg-slate-500 object-cover object-top" fill={true}
-                       alt="Dots pattern overlay"/>
+                <Image
+                    src="/assets/images/ND_Dome_Sketch.png"
+                    alt="Notre Dame football helmet raised up"
+                    className="opacity-90 object-cover object-center"
+                    fill={true}
+                    sizes="100%"
+                    placeholder="blur"
+                    blurDataURL={'/assets/images/ND_Dome_Sketch.png'}
+                />
+
+                <Image
+                    src="/assets/images/HeroPattern.jpg"
+                    alt="Dots pattern overlay"
+                    className="opacity-10 bg-slate-500 object-cover object-top"
+                    fill={true}
+                    sizes="100%"
+                />
             </div>
 
             <div className="bg-white flex flex-1 flex-col  min-h-full justify-center mb-12 py-5 sm:px-6 lg:px-8">
@@ -230,7 +211,7 @@ const SignUp = () => {
                                 <button
                                     type="submit"
                                     disabled={!enableCreateAccountButton}
-                                    className={filterAndJoinClasses(
+                                    className={clsx(
                                         enableCreateAccountButton ? " bg-indigo-700 hover:bg-indigo-600" : " bg-gray-500 hover:bg-gray-500",
                                         "flex w-full justify-center rounded-md  px-3 py-2 text-sm font-semibold leading-6 text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                     )}

@@ -7,10 +7,22 @@ export function Hero() {
     return (
         <section className="">
             <div className="relative pt-10 bg-black">
-                    <Image src="/assets/images/ND_Helmet.webp" className="opacity-20 object-cover object-top"
-                           alt="Notre Dame football helmet raised up" fill={true} priority={true}/>
-                    <Image src="/assets/images/HeroPattern.jpg" className="opacity-10 object-cover object-top" fill={true}
-                           alt="Dots pattern overlay"/>
+                    <Image
+                        src="/assets/images/ND_Helmet.webp"
+                        className="opacity-20 object-cover object-top"
+                        alt="Notre Dame football helmet raised up"
+                        fill={true}
+                        sizes="100%"
+                        placeholder="blur"
+                        blurDataURL={'/assets/images/ND_Helmet.webp'}
+                    />
+                    <Image
+                        src="/assets/images/HeroPattern.jpg"
+                        className="opacity-10 object-cover object-top"
+                        alt="Dots pattern overlay"
+                        fill={true}
+                        sizes="100%"
+                    />
 
                 <Container className="relative py-20 text-center lg:py-32 rounded-full">
                     <h1 className="mx-auto max-w-4xl font-display text-5xl font-medium tracking-tight text-white sm:text-7xl">

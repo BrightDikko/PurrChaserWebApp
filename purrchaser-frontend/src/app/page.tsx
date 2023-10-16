@@ -2,7 +2,7 @@ import { Header } from '@/components/nav/Header'
 import {Hero} from "@/components/hero/Hero";
 import Trending from "@/components/listings/Trending";
 import {Testimonials} from "@/components/hero/Testimonials";
-import {Footer} from "@/components/Footer";
+import {Footer} from "@/components/nav/Footer";
 import RecentlyPurchased from "@/components/listings/RecentlyPurchased";
 import AvailableForSale from "@/components/listings/AvailableForSale";
 

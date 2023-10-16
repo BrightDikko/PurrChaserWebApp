@@ -1,3 +1,5 @@
+import React from "react";
+
 export function Logo(props: React.ComponentPropsWithoutRef<'svg'>) {
   return (
     <svg aria-hidden="true" viewBox="0 0 109 40" {...props}>

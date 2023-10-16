@@ -1,15 +1,15 @@
+import React from "react"
 import Link from 'next/link'
 import clsx from 'clsx'
-import React from "react"
 
-const baseStyles = {
+const baseStyles: any = {
   solid:
     'group inline-flex items-center justify-center rounded-md py-2 px-4 text-sm font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2',
   outline:
     'group inline-flex ring-1 items-center justify-center rounded-md py-2 px-4 text-sm focus:outline-none',
 }
 
-const variantStyles = {
+const variantStyles: any = {
   solid: {
     slate:
       'bg-slate-900 text-white hover:bg-slate-700 hover:text-slate-100 active:bg-slate-800 active:text-slate-300 focus-visible:outline-slate-900',

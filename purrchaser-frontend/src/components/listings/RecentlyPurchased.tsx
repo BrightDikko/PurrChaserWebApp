@@ -1,13 +1,13 @@
 "use client"
 
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Container} from "@/components/shared/Container";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import clsx from "clsx";
 
 import {RECENTLY_PURCHASED_DATA} from "@/data/listings/RecentlyPurchased";
-import Slider from "react-slick";
+import Slider, {Settings} from "react-slick";
 
 const PRODUCTS_PER_PAGE = 2;
 const products = RECENTLY_PURCHASED_DATA;
@@ -98,17 +98,17 @@ export default function RecentlyPurchased() {
         }
     }, []);
 
-    const settings = {
+    const settings: Settings = {
         dots: false,
         infinite: false,
         speed: 500,
         slidesToShow: slidesToShow,
         slidesToScroll: slidesToShow,
-        nextArrow: <CustomNextArrow hide={currentSlide >= products.length - PRODUCTS_PER_PAGE} />,
-        prevArrow: <CustomPrevArrow hide={currentSlide === 0} />,
-        lazyLoad: true,
+        nextArrow: <CustomNextArrow hide={currentSlide >= products.length - PRODUCTS_PER_PAGE} onClick={undefined}/>,
+        prevArrow: <CustomPrevArrow hide={currentSlide === 0} onClick={undefined}/>,
+        lazyLoad: "progressive",
         className: "slider variable-width",
-        beforeChange: (_, next) => setCurrentSlide(next)
+        beforeChange: (_: any, next: React.SetStateAction<number>) => setCurrentSlide(next)
     };
 
     return (
@@ -127,6 +127,7 @@ export default function RecentlyPurchased() {
                 {products.map((product, productIndex) => (
                     <div key={productIndex} className="px-1 group relative flex flex-col">
                         <div className="rounded-md bg-gray-200 aspect-square">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                                 src={product.imageSrc}
                                 alt={product.imageAlt}
