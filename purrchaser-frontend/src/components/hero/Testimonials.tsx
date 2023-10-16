@@ -11,6 +11,7 @@ import avatarImage7 from '@/images/avatars/avatar-7.png'
 import avatarImage8 from '@/images/avatars/avatar-8.png'
 
 import backgroundImage from '@/images/background-faqs.jpg'
+import React from "react";
 
 const testimonials = [
   [
@@ -90,6 +91,10 @@ export function Testimonials() {
       aria-label="What our customers are saying"
       className="relative overflow-hidden bg-slate-50 mt-20 sm:mt-32 py-16 sm:py-32"
     >
+
+        <Image src="/assets/images/ND_Dome_Sketch.png" className="opacity-[17%]  object-contain object-top"
+               alt="Notre Dame football helmet raised up" fill={true} priority={true}/>
+
       <Image
           className="absolute left-1/2 top-1/2 max-w-none -translate-x-1/2 -translate-y-1/2 opacity-50"
           src={backgroundImage}

@@ -93,6 +93,8 @@ const SingleAvailableForSaleSection: React.FC<SingleAvailableForSaleSectionProps
             setSlidesToShow(getSlidesToShow());
         }
 
+        handleResize();
+
         window.addEventListener('resize', handleResize);
         return () => {
             window.removeEventListener('resize', handleResize);

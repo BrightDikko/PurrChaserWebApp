@@ -3,11 +3,10 @@
 import React, {Fragment} from 'react'
 import Link from 'next/link'
 import {Popover, Transition} from '@headlessui/react'
-import clsx from 'clsx'
 
 import {Button} from '@/components/shared/Button'
 import {Container} from '@/components/shared/Container'
-import {BellIcon, ShoppingCartIcon, PlusIcon, ShoppingBagIcon} from '@heroicons/react/24/outline'
+import {BellIcon, ShoppingCartIcon, PlusIcon} from '@heroicons/react/24/outline'
 import {NavLink} from '@/components/shared/NavLink'
 
 function MobileNavLink({
@@ -82,14 +81,19 @@ function MobileNavigation() {
                         <MobileNavLink href="/#">Notifications</MobileNavLink>
                         <MobileNavLink href="/#">Cart</MobileNavLink>
                         <hr className="m-2 border-slate-300/40"/>
-                        <MobileNavLink href="/#">Log in</MobileNavLink>
-                        <MobileNavLink href="/#">Sign up</MobileNavLink>
+                        <MobileNavLink href="/login">Log in</MobileNavLink>
+                        <MobileNavLink href="/register">Sign up</MobileNavLink>
                     </Popover.Panel>
                 </Transition.Child>
             </Transition.Root>
         </Popover>
     )
 }
+
+const handleLogIn = () => {
+    console.log("Login Button clicked!")
+}
+
 
 export function Header() {
     return (
@@ -106,8 +110,8 @@ export function Header() {
                     </div>
                     <div className="flex items-center gap-x-5 md:gap-x-5">
                         <div className="hidden md:flex space-x-2">
-                            <NavLink href="/#">Log in</NavLink>
-                            <NavLink href="/#">Sign up</NavLink>
+                            <NavLink href="/login" onClick={handleLogIn}>Log in</NavLink>
+                            <NavLink href="/register">Sign up</NavLink>
                             <NavLink href="/#">
                                 <div className="flex space-x-1">
                                     <span><BellIcon className="h-6 w-6" aria-hidden="true"/></span>
