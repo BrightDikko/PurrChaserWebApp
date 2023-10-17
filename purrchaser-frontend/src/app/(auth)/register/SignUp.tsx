@@ -118,7 +118,7 @@ const SignUp = () => {
             <div className="bg-white flex flex-1 flex-col  min-h-full justify-center mb-12 py-5 sm:px-6 lg:px-8">
 
                 <div className=" sm:mx-auto sm:w-full sm:max-w-md">
-                    <h2 className="mt-6 text-center md:text-left  text-2xl font-bold leading-9 tracking-tight text-gray-800">
+                    <h2 className="text-center md:text-left  text-2xl font-bold leading-9 tracking-tight text-gray-800">
                         Create PurrChaser Account
                     </h2>
                 </div>

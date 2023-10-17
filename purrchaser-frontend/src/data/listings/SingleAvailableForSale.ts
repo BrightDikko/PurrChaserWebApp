@@ -195,7 +195,7 @@ export const WINTER_GEAR_DATA: Product[] = [
         imageAlt: 'Hand stitched, orange leather long wallet.',
     },
     {
-        name: 'Listing 1',
+        name: 'Listing 8',
         color: 'Natural',
         price: '$75',
         href: '#',
