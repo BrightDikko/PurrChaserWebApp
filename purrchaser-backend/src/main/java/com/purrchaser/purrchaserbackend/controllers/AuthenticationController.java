@@ -3,7 +3,7 @@ package com.purrchaser.purrchaserbackend.controllers;
 import com.purrchaser.purrchaserbackend.exceptions.EmailAlreadyTakenException;
 import com.purrchaser.purrchaserbackend.exceptions.UserDoesNotExistException;
 import com.purrchaser.purrchaserbackend.models.ApplicationUser;
-import com.purrchaser.purrchaserbackend.models.RegistrationObject;
+import com.purrchaser.purrchaserbackend.models.RegistrationRequest;
 import com.purrchaser.purrchaserbackend.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -37,21 +37,8 @@ public class AuthenticationController {
 
     // go to http://localhost:8000/auth/register
     @PostMapping("/register")
-    public ApplicationUser registerUser(@RequestBody RegistrationObject registrationRequest) {
-
+    public ApplicationUser registerUser(@RequestBody RegistrationRequest registrationRequest) {
         return userService.registerUser(registrationRequest);
-    }
-
-    @PutMapping("/update/phone")
-    public ApplicationUser updatePhoneNumber(@RequestBody LinkedHashMap<String, String> body) {
-        String username = body.get("username");
-        String phone = body.get("phone");
-
-        ApplicationUser user = userService.getUserByUsername(username);
-
-        user.setPhone(phone);
-
-        return userService.updateUser(user);
     }
 
 }

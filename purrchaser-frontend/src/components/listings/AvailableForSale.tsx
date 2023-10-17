@@ -1,6 +1,6 @@
 "use client"
 
-import React, {useState} from 'react';
+import React from 'react';
 import {Container} from "@/components/shared/Container";
 import {FOOTBALL_TICKETS_DATA, TEXT_BOOKS_DATA, WINTER_GEAR_DATA} from "@/data/listings/SingleAvailableForSale";
 import SingleAvailableForSaleSection from "@/components/listings/SingleAvailableForSaleSection";
