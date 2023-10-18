@@ -1,6 +1,6 @@
 export interface UserInfo {
-    fullName: string;
-    schoolName: string;
+    fullName: string | null;
+    schoolName: string | null;
     email: string;
     password: string;
 }

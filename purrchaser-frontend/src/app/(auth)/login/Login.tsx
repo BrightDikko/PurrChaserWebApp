@@ -4,15 +4,34 @@ import React, {useEffect, useState} from "react";
 import Image from "next/image";
 import clsx from "clsx";
 import {UserInfo} from "@/types/UserInfo";
+import {useAppDispatch, useAppSelector} from "@/hooks/hooks";
+import {useRouter} from "next/navigation";
+import {loginUser} from "@/store/slices/authSlice";
 
 const LogIn = () => {
-    const [loading, setLoading] = useState(false);
+    const router = useRouter();
+    const dispatch = useAppDispatch();
+    const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
 
-    const isAuthenticated = false;
+    const [loading, setLoading] = useState(false);
 
     const [enteredEmail, setEnteredEmail] = useState("");
     const [enteredPassword, setEnteredPassword] = useState("");
     const [enableCreateAccountButton, setEnableCreateAccountButton] = useState(false);
+
+    useEffect(() => {
+        setLoading(false);
+        setEnteredEmail("");
+        setEnteredPassword("");
+        setEnableCreateAccountButton(false);
+    }, []);
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            console.log("User is already logged in. REDIRECTING TO HOME PAGE!");
+            router.push('/');
+        }
+    }, [router, isAuthenticated]);
 
     useEffect(() => {
         const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+$/;
@@ -36,24 +55,21 @@ const LogIn = () => {
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+
         setLoading(true);
 
         const userInfo: UserInfo = {
-            fullName: "dummy_firstname",
-            schoolName: "dummy_school_name",
+            fullName: null,
+            schoolName: null,
             email: enteredEmail,
             password: enteredPassword
         };
 
+        dispatch(loginUser(userInfo));
+        setLoading(false);
+
         console.log("User logged in successfully!\nUser Info:", userInfo);
-
-        setEnteredEmail("");
-        setEnteredPassword("");
-    }
-
-    if (isAuthenticated) {
-        // console.log("User is already logged in. REDIRECTING TO HOME PAGE!");
-        return;
+        router.push('/');
     }
 
     return (
