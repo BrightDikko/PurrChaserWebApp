@@ -1,23 +1,36 @@
-import { Header } from '@/components/nav/Header'
+"use client"
+
+import {Header} from '@/components/nav/Header'
 import {Hero} from "@/components/hero/Hero";
 import Trending from "@/components/listings/Trending";
 import {Testimonials} from "@/components/hero/Testimonials";
 import {Footer} from "@/components/nav/Footer";
 import RecentlyPurchased from "@/components/listings/RecentlyPurchased";
 import AvailableForSale from "@/components/listings/AvailableForSale";
+import {Provider} from "react-redux";
+import {store} from "@/store/store";
+import {useAppSelector} from "@/hooks/hooks";
+import UserHome from "@/components/listings/UserHome";
 
 export default function Home() {
-  return (
-      <>
-        <Header />
-        <main>
-            <Hero/>
-            <Trending/>
-            <RecentlyPurchased/>
-            <AvailableForSale/>
-            <Testimonials/>
-        </main>
-          <Footer/>
-      </>
-  )
+    const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
+
+    return (
+        <Provider store={store}>
+            <Header/>
+            <main>
+                {!isAuthenticated &&
+                    <>
+                        <Hero/>
+                        <Trending/>
+                        <RecentlyPurchased/>
+                        <AvailableForSale/>
+                    </>
+                }
+                {isAuthenticated && <UserHome/>}
+                <Testimonials/>
+            </main>
+            <Footer/>
+        </Provider>
+    )
 }

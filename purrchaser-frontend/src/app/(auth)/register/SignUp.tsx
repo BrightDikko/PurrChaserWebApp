@@ -4,6 +4,9 @@ import React, {useEffect, useState} from "react";
 import Image from "next/image";
 import clsx from "clsx";
 import {UserInfo} from "@/types/UserInfo";
+import {useAppDispatch, useAppSelector} from "@/hooks/hooks";
+import {useRouter} from "next/navigation";
+import {registerUser} from "@/store/slices/authSlice";
 
 interface ValidSchools {
     school_1: string;
@@ -16,13 +19,15 @@ type SchoolKeys = keyof ValidSchools;
 const VALID_SCHOOLS = {
     "school_1": "Holy Cross College",
     "school_2": "Saint Mary's College",
-    "school_3": "University of Notre Dame"
+    "school_3": "University of Notre Dame",
 }
 
 const SignUp = () => {
-    const [loading, setLoading] = useState(false);
+    const router = useRouter();
+    const dispatch = useAppDispatch();
+    const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
 
-    const isAuthenticated = false;
+    const [loading, setLoading] = useState(false);
 
     const [enteredFullName, setEnteredFullName] = useState("");
     const [selectedSchoolKey, setSelectedSchoolKey] = useState<SchoolKeys | "DEFAULT">("DEFAULT");
@@ -31,8 +36,20 @@ const SignUp = () => {
     const [enableCreateAccountButton, setEnableCreateAccountButton] = useState(false);
 
     useEffect(() => {
-        document.title = "TRiBE Sign Up | Create new TRiBE Account";
+        setLoading(false);
+        setEnteredFullName("");
+        setSelectedSchoolKey("DEFAULT");
+        setEnteredEmail("");
+        setEnteredPassword("");
+        setEnableCreateAccountButton(false);
     }, []);
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            console.log("User is already registered. REDIRECTING TO HOME PAGE!");
+            router.push('/');
+        }
+    }, [router, isAuthenticated]);
 
     useEffect(() => {
         const enteredFullNameIsValid = enteredFullName.trim().length > 2;
@@ -69,29 +86,26 @@ const SignUp = () => {
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+
+        if (selectedSchoolKey === "DEFAULT") {
+            return;
+        }
+
         setLoading(true);
 
         const userInfo: UserInfo = {
-            fullName: "dummy_firstname",
-            schoolName: "dummy_school_name",
+            fullName: enteredFullName,
+            schoolName: VALID_SCHOOLS[selectedSchoolKey],
             email: enteredEmail,
             password: enteredPassword
         };
 
+        dispatch(registerUser(userInfo));
+        setLoading(false);
+
         console.log("User registered successfully!\nUser Info:", userInfo);
-
-        setEnteredEmail("");
-        setEnteredFullName("");
-        setSelectedSchoolKey("DEFAULT");
-        setEnteredPassword("");
-        setEnableCreateAccountButton(false);
+        router.push('/login');
     }
-
-    if (isAuthenticated) {
-        // console.log("User is already registered. REDIRECTING TO HOME PAGE!");
-        return;
-    }
-
 
     return (
         <div className="pt-10 sm:pt-0 relative bg-white flex sm:min-h-full flex-row items-center ">
@@ -118,7 +132,7 @@ const SignUp = () => {
             <div className="bg-white flex flex-1 flex-col  min-h-full justify-center mb-12 py-5 sm:px-6 lg:px-8">
 
                 <div className=" sm:mx-auto sm:w-full sm:max-w-md">
-                    <h2 className="mt-6 text-center md:text-left  text-2xl font-bold leading-9 tracking-tight text-gray-800">
+                    <h2 className="text-center md:text-left  text-2xl font-bold leading-9 tracking-tight text-gray-800">
                         Create PurrChaser Account
                     </h2>
                 </div>
@@ -135,9 +149,10 @@ const SignUp = () => {
                                     <input
                                         id="user_fullname"
                                         name="user_fullname"
-                                        type="user_fullname"
+                                        type="text"
                                         autoComplete="name"
                                         required
+                                        placeholder="Enter your full name"
                                         value={enteredFullName}
                                         onChange={handleFullNameChange}
                                         className="block w-full rounded-md border-0 py-2 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"

@@ -6,7 +6,9 @@ export const metadata: Metadata = {
 }
 
 export default function Login() {
-    return (<LogIn/>)
+    return (
+        <LogIn/>
+    )
 }
 
 

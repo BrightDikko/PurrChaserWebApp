@@ -25,7 +25,7 @@ export function Testimonials() {
 
             <Image
                 src="/assets/images/ND_Dome_Sketch.png"
-                alt="Notre Dame football helmet raised up"
+                alt="Notre Dame Main Building Sketch"
                 className="opacity-[17%] object-contain object-top"
                 fill={true}
                 sizes="100%"

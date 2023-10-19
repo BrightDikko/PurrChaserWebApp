@@ -47,7 +47,7 @@ export function Hero() {
                     </p>
 
                     <div className="mt-10 flex justify-center gap-x-6">
-                        <Button href="/#" variant="solid" color="white">Explore marketplace</Button>
+                        <Button href="/#" variant="solid" color="white"><span className="px-4">Get Started</span></Button>
                         <a href="https://www.youtube.com/watch?v=G3me4kwq9q4" target="_blank">
                             <Button variant="outline" >
                                 <svg

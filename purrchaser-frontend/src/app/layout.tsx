@@ -5,44 +5,45 @@ import {Inter, Lexend} from 'next/font/google'
 
 import clsx from 'clsx'
 import '@/styles/tailwind.css'
+import ReduxProvider from "@/store/ReduxProvider";
 
 
 export const metadata: Metadata = {
-  title: {
-    template: '%s - PurrChaser',
-    default: 'PurrChaser - Imagine a place, where the TRiBE trades',
-  },
-  description:
-      'Imagine a place, a secured space, where your TRiBE can trade. Imagine PurrChaser',
+    title: {
+        template: '%s - PurrChaser',
+        default: 'PurrChaser - Imagine a place, where the TRiBE trades',
+    },
+    description:
+        'Imagine a place, a secured space, where your TRiBE can trade. Imagine PurrChaser',
 }
 
 const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-inter',
+    subsets: ['latin'],
+    display: 'swap',
+    variable: '--font-inter',
 })
 
 const lexend = Lexend({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-lexend',
+    subsets: ['latin'],
+    display: 'swap',
+    variable: '--font-lexend',
 })
 
-export default function RootLayout({
-                                     children,
-                                   }: {
-  children: React.ReactNode
-}) {
-  return (
-      <html
-          lang="en"
-          className={clsx(
-              'h-full scroll-smooth bg-white antialiased',
-              inter.variable,
-              lexend.variable,
-          )}
-      >
-      <body className="flex h-full flex-col">{children}</body>
-      </html>
-  )
+export default function RootLayout({children}: {children: React.ReactNode}) {
+    return (
+        <html
+            lang="en"
+            className={clsx(
+                'h-full scroll-smooth bg-white antialiased',
+                inter.variable,
+                lexend.variable,
+            )}
+        >
+            <body className="flex h-full flex-col">
+                <ReduxProvider>
+                    {children}
+                </ReduxProvider>
+            </body>
+        </html>
+    )
 }

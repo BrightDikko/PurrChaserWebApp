@@ -10,7 +10,7 @@ export default function AvailableForSale() {
 
     return (
         <Container>
-            <div className="px-1 sm:px-5 lg:px-7 pt-8 sm:pt-14 mb-6 sm:mb-10 flex flex-col sm:flex-row sm:space-x-2 space-y-1 sm:space-y-0  border-t-[1.5px] mt-8">
+            <div className="pt-8 sm:pt-14 mb-6 sm:mb-10 flex flex-col md:flex-row md:space-x-2 space-y-1 md:space-y-0  border-t-[1.5px] mt-8">
                 <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900">Meet your next obsession -</h2>
                 <span className="text-2xl sm:text-3xl font-bold tracking-tight text-green-600">Available for sale</span>
             </div>
