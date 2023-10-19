@@ -58,7 +58,7 @@ export const TESTIMONIALS_DATA = [
         },
         {
             content:
-                'I had a my account verified in minutes! The PurrChaser support team was super responsive in getting me up and running in no time. Impressive service!',
+                'I had my account verified in minutes! The PurrChaser support team was super responsive in getting me up and running in no time. Impressive service!',
             author: {
                 name: 'Bella Wade',
                 role: 'Senior at University of Notre Dame',

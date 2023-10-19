@@ -75,10 +75,14 @@ function CustomNextArrow(props: CustomArrowProps) {
 function getSlidesToShow() {
     const width = window.innerWidth;
 
-    if (width >= 1024) { // XL breakpoint
+    if (width >= 1280) { // XL breakpoint
         return 6;
-    } else if (width >= 640) { // SM breakpoint
+    } else if (width >= 1024) { // SM breakpoint
+        return 5;
+    } else if (width >= 768) { // SM breakpoint
         return 4;
+    } else if (width >= 640) { // SM breakpoint
+        return 3;
     } else {
         return 2;
     }
@@ -117,9 +121,9 @@ const SingleAvailableForSaleSection: React.FC<SingleAvailableForSaleSectionProps
     };
 
     return (
-            <div className="mx-auto py-5 sm:px-6 lg:px-8 mb-3 ">
-                <div className="flex mb-6 items-center justify-between">
-                    <h2 className="text-2xl font-bold tracking-tight text-gray-900">{sectionTitle}</h2>
+            <div className="mx-auto py-3  ">
+                <div className="flex mb-3 items-center justify-between">
+                    <h2 className="text-xl font-bold tracking-tight text-gray-900">{sectionTitle}</h2>
                     <a href="#"
                        className="text-sm font-medium text-indigo-600 hover:text-indigo-500 md:block">
                         See all
@@ -129,21 +133,22 @@ const SingleAvailableForSaleSection: React.FC<SingleAvailableForSaleSectionProps
 
                 <Slider {...settings} className="relative">
                     {products.map((product, productIndex) => (
-                        <div key={productIndex} className="px-1 group relative flex flex-col">
-                            <div className="rounded-md bg-gray-200 aspect-square">
+                        <div key={productIndex} className="px-2 group relative flex flex-col">
+                            <div className="h-40 w-full rounded-md bg-gray-200 aspect-square">
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img
                                     src={product.imageSrc}
                                     alt={product.imageAlt}
-                                    className="object-cover w-full h-full rounded-md group-hover:opacity-90"
+                                    className="object-cover w-full h-full rounded-md group-hover:opacity-95"
                                 />
                             </div>
-                            <h3 className="mt-4 pl-1 text-sm text-gray-700">
+                            <h3 className="mt-2 text-sm text-gray-700">
                                 <a href={product.href}>
                                     <span className="absolute inset-0"/>
                                     {product.name}
                                 </a>
                             </h3>
+                            <p className="text-sm font-semibold text-gray-900">{product.price}</p>
                         </div>
                     ))}
                 </Slider>

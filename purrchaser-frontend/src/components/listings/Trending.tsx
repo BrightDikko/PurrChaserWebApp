@@ -35,11 +35,11 @@ export default function Trending() {
                                     <img
                                         src={product.imageSrc}
                                         alt={product.imageAlt}
-                                        className="h-full w-full object-cover rounded-md group-hover:opacity-90 object-center"
+                                        className="h-full w-full object-cover rounded-md group-hover:opacity-95 object-center"
                                     />
                                 </div>
                                 <h3 className="flex justify-center mt-4 text-sm text-gray-700">
-                                    <a href={product.href}>
+                                    <a href={product.href} >
                                         <span className="absolute inset-0"/>
                                         {product.name}
                                     </a>

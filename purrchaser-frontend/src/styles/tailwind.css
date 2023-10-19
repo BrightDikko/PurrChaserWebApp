@@ -29,3 +29,7 @@ body {
 .flex.transition-all {
     transition: transform 0.3s ease-in-out;
 }
+
+button, a {
+    -webkit-tap-highlight-color: transparent; /* Remove the default tap color on mobile web browsers */
+}
