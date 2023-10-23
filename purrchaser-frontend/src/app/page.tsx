@@ -11,12 +11,14 @@ import {Provider} from "react-redux";
 import {store} from "@/store/store";
 import {useAppSelector} from "@/hooks/hooks";
 import UserHome from "@/components/listings/UserHome";
+import Category from "@/app/categories/[category]/Category";
+import React from "react";
 
 export default function Home() {
     const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
 
     return (
-        <Provider store={store}>
+        <>
             <Header/>
             <main>
                 {!isAuthenticated &&
@@ -31,6 +33,6 @@ export default function Home() {
                 <Testimonials/>
             </main>
             <Footer/>
-        </Provider>
+        </>
     )
 }

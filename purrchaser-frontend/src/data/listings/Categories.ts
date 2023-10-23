@@ -1,47 +1,47 @@
 export const MAIN_CATEGORIES_DATA = [
     {
         title: "Football Tickets",
-        href: "/#",
+        href: "/categories/football-tickets",
         current: true,
     },
     {
         title: "Books",
-        href: "/#",
+        href: "/categories/books",
         current: false,
     },
     {
         title: "Laptops",
-        href: "/#",
+        href: "/categories/laptops",
         current: false,
     },
     {
         title: "Phones",
-        href: "/#",
+        href: "/categories/phones",
         current: false,
     },
     {
         title: "Furniture",
-        href: "/#",
+        href: "/categories/furniture",
         current: false,
     },
     {
         title: "Arts & Crafts",
-        href: "/#",
+        href: "/categories/arts-and-crafts",
         current: false,
     },
     {
         title: "Winter Gear",
-        href: "/#",
+        href: "/categories/winter-gear",
         current: false,
     },
     {
         title: "Concert Tickets",
-        href: "/#",
+        href: "/categories/concert-tickets",
         current: false,
     },
     {
         title: "Kitchen Utensils",
-        href: "/#",
+        href: "/categories/kitchen-utensils",
         current: false,
     },
 ]
@@ -56,18 +56,18 @@ export const FULL_CATEGORIES_DATA = [
                 current: true,
                 subCategories2: [
                     {
-                        title: "ND Football",
-                        href: "/#",
+                        title: "Football",
+                        href: "/categories/football-tickets",
                         current: true,
                     },
                     {
                         title: "Basketball",
-                        href: "/#",
+                        href: "/categories/basketball-tickets",
                         current: false,
                     },
                     {
                         title: "Rugby",
-                        href: "/#",
+                        href: "/categories/rugby-tickets",
                         current: false,
                     },
                 ]

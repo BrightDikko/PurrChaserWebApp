@@ -6,6 +6,7 @@ import {Inter, Lexend} from 'next/font/google'
 import clsx from 'clsx'
 import '@/styles/tailwind.css'
 import ReduxProvider from "@/store/ReduxProvider";
+import MainLayout from "@/app/layout/MainLayout";
 
 
 export const metadata: Metadata = {
@@ -41,7 +42,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
         >
             <body className="flex h-full flex-col">
                 <ReduxProvider>
-                    {children}
+                        {children}
                 </ReduxProvider>
             </body>
         </html>
