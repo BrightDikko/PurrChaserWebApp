@@ -5,10 +5,13 @@ import {Container} from "@/components/shared/Container";
 import {FOOTBALL_TICKETS_DATA, TEXT_BOOKS_DATA, WINTER_GEAR_DATA} from "@/data/listings/SingleAvailableForSale";
 import SingleAvailableForSaleSection from "@/components/listings/SingleAvailableForSaleSection";
 import HomeNavTabs from "@/components/nav/HomeNavTabs";
+import {useRouter} from "next/navigation";
 
 const products = [...FOOTBALL_TICKETS_DATA, ...WINTER_GEAR_DATA, ...TEXT_BOOKS_DATA]
 
 export default function UserHome() {
+    const router = useRouter();
+
     const [activeTab, setActiveTab] = useState(1);
 
     const updateActiveTabHandler = (value: number) => {
@@ -48,7 +51,10 @@ export default function UserHome() {
                             />
                         </div>
                         <h3 className="mt-2 text-sm text-gray-700">
-                            <a href={product.href}>
+                            <a onClick={(event) => {
+                                event.preventDefault();
+                                router.push(product.href);
+                            }}>
                                 <span className="absolute inset-0"/>
                                 {product.name}
                             </a>
