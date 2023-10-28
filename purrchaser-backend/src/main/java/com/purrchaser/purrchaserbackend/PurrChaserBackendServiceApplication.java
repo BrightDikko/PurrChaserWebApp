@@ -1,12 +1,16 @@
 package com.purrchaser.purrchaserbackend;
 
+import com.purrchaser.purrchaserbackend.models.ApplicationUser;
 import com.purrchaser.purrchaserbackend.models.Role;
 import com.purrchaser.purrchaserbackend.repositories.RoleRepository;
-import com.purrchaser.purrchaserbackend.services.UserService;
+import com.purrchaser.purrchaserbackend.repositories.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @SpringBootApplication
 public class PurrChaserBackendServiceApplication {
@@ -16,10 +20,32 @@ public class PurrChaserBackendServiceApplication {
 	}
 
 	@Bean
-	CommandLineRunner run(RoleRepository roleRepository, UserService userService) {
+	CommandLineRunner run(RoleRepository roleRepository, UserRepository userRepository) {
 		return args -> {
+
+
+			if (roleRepository.findByAuthority("ADMIN").isEmpty()) {
+				Role adminRole = roleRepository.save(Role.builder()
+								.roleId(1)
+								.authority("ADMIN")
+								.build());
+
+				Set<Role> roles = new HashSet<>();
+				roles.add(adminRole);
+
+				ApplicationUser admin = ApplicationUser.builder()
+						.userId(1)
+						.email("devbydikko@gmail.com")
+						.fullName("admin")
+						.password("password")
+						.authorities(roles)
+						.build();
+
+				userRepository.save(admin);
+			}
+
 			roleRepository.save(Role.builder()
-					.roleId(1)
+					.roleId(2)
 					.authority("USER")
 					.build());
 		};
