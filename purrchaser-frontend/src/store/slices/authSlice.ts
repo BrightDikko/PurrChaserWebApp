@@ -1,18 +1,27 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import AuthService from "@/store/services/authService";
 import {UserInfo} from "@/types/UserInfo";
 
 
 const user = ((typeof window !== "undefined") && (localStorage.getItem("user"))) ? JSON.parse(localStorage.getItem("user")!) : null;
 
+export interface User {
+    fullName: string | null;
+    schoolName: string | null;
+    email: string;
+    password: string;
+}
+
 export interface AuthState {
+    user: User | null;
+    token: string | null;
     isAuthenticated: boolean;
-    user: typeof user | null;
 }
 
 const initialState: AuthState = {
-    isAuthenticated: user ? true : false,
     user: user ? user : null,
+    token: null,
+    isAuthenticated: user ? true : false,
 };
 
 
@@ -67,31 +76,24 @@ export const authSlice = createSlice({
             console.log("Logging out user")
             state.isAuthenticated = false;
             state.user = null;
+        },
+
+        setCredentials: (
+            state,
+            {payload: {user, token}}: PayloadAction<{ user: User, token: string }>
+        ) => {
+            state.user = user;
+            state.token = token;
         }
 
     },
-    extraReducers: (builder) => {
-        builder.addCase(login.fulfilled, (state, action) => {
-            state.isAuthenticated = true;
-            state.user = action.payload.user;
-        });
-        builder.addCase(login.rejected, (state) => {
-            state.isAuthenticated = false;
-            state.user = null;
-        });
-        builder.addCase(register.fulfilled, (state) => {
-            state.isAuthenticated = false;
-        });
-        builder.addCase(register.rejected, (state) => {
-            state.isAuthenticated = false;
-        });
-        builder.addCase(logout.fulfilled, (state) => {
-            state.isAuthenticated = false;
-            state.user = null;
-        });
-    }
 })
 
-export const {registerUser, loginUser, logoutUser} = authSlice.actions;
+export const {
+    registerUser,
+    loginUser,
+    logoutUser,
+    setCredentials
+} = authSlice.actions;
 
 export default authSlice.reducer;
