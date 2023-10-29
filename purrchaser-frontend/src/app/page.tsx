@@ -9,12 +9,13 @@ import RecentlyPurchased from "@/components/listings/RecentlyPurchased";
 import AvailableForSale from "@/components/listings/AvailableForSale";
 import {Provider} from "react-redux";
 import {store} from "@/store/store";
-import {useAppSelector} from "@/hooks/hooks";
+import {useAppSelector} from "@/hooks/store";
 import UserHome from "@/components/listings/UserHome";
 import Category from "@/app/categories/[category]/Category";
 import React from "react";
 
 export default function Home() {
+
     const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
 
     return (

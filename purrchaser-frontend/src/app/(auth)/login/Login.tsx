@@ -3,24 +3,23 @@
 import React, {useEffect, useState} from "react";
 import Image from "next/image";
 import clsx from "clsx";
-import {UserInfo} from "@/types/UserInfo";
-import {useAppDispatch, useAppSelector} from "@/hooks/hooks";
+import {useAppSelector} from "@/hooks/store";
 import {useRouter} from "next/navigation";
-import {loginUser} from "@/store/slices/authSlice";
+import {useLoginMutation} from "@/store/services/api";
+import {LoginRequest} from "@/store/services/api";
 
 const LogIn = () => {
+
     const router = useRouter();
-    const dispatch = useAppDispatch();
     const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
 
-    const [loading, setLoading] = useState(false);
+    const [login, {isLoading}] = useLoginMutation();
 
     const [enteredEmail, setEnteredEmail] = useState("");
     const [enteredPassword, setEnteredPassword] = useState("");
     const [enableCreateAccountButton, setEnableCreateAccountButton] = useState(false);
 
     useEffect(() => {
-        setLoading(false);
         setEnteredEmail("");
         setEnteredPassword("");
         setEnableCreateAccountButton(false);
@@ -29,9 +28,12 @@ const LogIn = () => {
     useEffect(() => {
         if (isAuthenticated) {
             console.log("User is already logged in. REDIRECTING TO HOME PAGE!");
-            router.push('/');
+            console.log("isAuthenticated: ", isAuthenticated);
+            router.push('/'); // REDIRECT TO USER PROFILE PAGE WHEN READY
         }
-    }, [router, isAuthenticated]);
+    }, [isAuthenticated, router]);
+
+    console.log("isAuthenticated: ", isAuthenticated);
 
     useEffect(() => {
         const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+$/;
@@ -53,23 +55,26 @@ const LogIn = () => {
         setEnteredPassword(event.target.value);
     }
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        setLoading(true);
-
-        const userInfo: UserInfo = {
-            fullName: null,
-            schoolName: null,
+        const userCredentials: LoginRequest = {
             email: enteredEmail,
             password: enteredPassword
         };
 
-        dispatch(loginUser(userInfo));
-        setLoading(false);
+        try {
+            const loginResponse = await login(userCredentials).unwrap();
 
-        console.log("User logged in successfully!\nUser Info:", userInfo);
-        router.push('/');
+            if (loginResponse.user !== null) {
+                console.log("User logged in successfully!\nUser Info:", loginResponse);
+                router.push('/');
+            }
+
+        } catch (userLoginError) {
+            console.error("An error occurred while attempting to Login user. userLoginError: ", userLoginError);
+        }
+
     }
 
     return (
@@ -167,12 +172,12 @@ const LogIn = () => {
                             <div>
                                 <button
                                     type="submit"
-                                    disabled={!enableCreateAccountButton || loading}
+                                    disabled={!enableCreateAccountButton || isLoading}
                                     className={clsx(
                                         enableCreateAccountButton ? " bg-indigo-700 hover:bg-indigo-600" : " bg-gray-400 hover:bg-gray-400",
                                         "flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600")}
                                 >
-                                    {loading && <div role="status">
+                                    {isLoading && <div role="status">
                                         <svg aria-hidden="true"
                                              className="mt-1 h-4 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-200"
                                              viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -207,8 +212,9 @@ const LogIn = () => {
                                     href="#"
                                     className="flex w-full items-center justify-center gap-1.5 rounded-md bg-white border px-3 py-2 text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#24292F]"
                                 >
-                                    <svg   className="h-5 w-5" aria-hidden="true" fill="currentColor" viewBox="0 0 32 32">
-                                        <path d="M 16.003906 14.0625 L 16.003906 18.265625 L 21.992188 18.265625 C 21.210938 20.8125 19.082031 22.636719 16.003906 22.636719 C 12.339844 22.636719 9.367188 19.664063 9.367188 16 C 9.367188 12.335938 12.335938 9.363281 16.003906 9.363281 C 17.652344 9.363281 19.15625 9.96875 20.316406 10.964844 L 23.410156 7.867188 C 21.457031 6.085938 18.855469 5 16.003906 5 C 9.925781 5 5 9.925781 5 16 C 5 22.074219 9.925781 27 16.003906 27 C 25.238281 27 27.277344 18.363281 26.371094 14.078125 Z"></path>
+                                    <svg className="h-5 w-5" aria-hidden="true" fill="currentColor" viewBox="0 0 32 32">
+                                        <path
+                                            d="M 16.003906 14.0625 L 16.003906 18.265625 L 21.992188 18.265625 C 21.210938 20.8125 19.082031 22.636719 16.003906 22.636719 C 12.339844 22.636719 9.367188 19.664063 9.367188 16 C 9.367188 12.335938 12.335938 9.363281 16.003906 9.363281 C 17.652344 9.363281 19.15625 9.96875 20.316406 10.964844 L 23.410156 7.867188 C 21.457031 6.085938 18.855469 5 16.003906 5 C 9.925781 5 5 9.925781 5 16 C 5 22.074219 9.925781 27 16.003906 27 C 25.238281 27 27.277344 18.363281 26.371094 14.078125 Z"></path>
                                     </svg>
                                     <span className="text-sm font-semibold leading-6">Google Account</span>
                                 </a>
@@ -217,7 +223,8 @@ const LogIn = () => {
 
                         <p className="mt-5 text-center text-sm text-gray-500">
                             Don&apos;t have an account?{' '}
-                            <a href="/register" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+                            <a href="/register"
+                               className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
                                 Sign up
                             </a>
                         </p>
@@ -232,7 +239,7 @@ const LogIn = () => {
 
                 </div>
             </div>
-            </div>
+        </div>
 
     );
 }

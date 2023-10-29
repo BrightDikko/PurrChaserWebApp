@@ -185,6 +185,137 @@ export const FULL_CATEGORIES_DATA = [
                     },
                 ]
             },
+            {
+                title: "Decorations",
+                subCategories2: [
+                    {
+                        title: "Arts & Craft",
+                        href: "/#",
+                        current: false,
+                    },
+                    {
+                        title: "Lights",
+                        href: "/#",
+                        current: false,
+                    },
+                    {
+                        title: "Picture Frames",
+                        href: "/#",
+                        current: false,
+                    },
+                ]
+            },
+        ],
+    },
+    {
+        title: "Electronics",
+        current: false,
+        subCategories1: [
+            {
+                title: "Phones",
+                subCategories2: [
+                    {
+                        title: "iPhones",
+                        href: "/#",
+                        current: false,
+                    },
+                    {
+                        title: "Androids",
+                        href: "/#",
+                        current: false,
+                    }
+                ]
+            },
+            {
+                title: "Laptops",
+                subCategories2: [
+                    {
+                        title: "Apple",
+                        href: "/#",
+                        current: false,
+                    },
+                    {
+                        title: "Lenovo",
+                        href: "/#",
+                        current: false,
+                    },
+                    {
+                        title: "HP",
+                        href: "/#",
+                        current: false,
+                    },
+                    {
+                        title: "Dell",
+                        href: "/#",
+                        current: false,
+                    },
+                    {
+                        title: "MSI",
+                        href: "/#",
+                        current: false,
+                    },
+                ]
+            },
+            {
+                title: "Television",
+                subCategories2: [
+                    {
+                        title: "Fire TV",
+                        href: "/#",
+                        current: false,
+                    },
+                    {
+                        title: "Samsung",
+                        href: "/#",
+                        current: false,
+                    },
+                    {
+                        title: "Panasonic",
+                        href: "/#",
+                        current: false,
+                    },
+                ]
+            },
+            {
+                title: "Headphones",
+                subCategories2: [
+                    {
+                        title: "Beats",
+                        href: "/#",
+                        current: false,
+                    },
+                    {
+                        title: "Airpods",
+                        href: "/#",
+                        current: false,
+                    },
+                    {
+                        title: "Wired",
+                        href: "/#",
+                        current: false,
+                    },
+                ]
+            },
+            {
+                title: "Watch",
+                subCategories2: [
+                    {
+                        title: "Apple Watches",
+                        href: "/#",
+                        current: false,
+                    },
+                    {
+                        title: "Fit-Bit",
+                        href: "/#",
+                        current: false,
+                    },
+                    {
+                        title: "Whoop",
+                        href: "/#",
+                        current: false,
+                    },
+                ]
+            },
         ],
     },
 ]

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {UserInfo} from "@/types/UserInfo";
 
-const API_URL = 'http://localhost:8080';
+const API_URL = 'http://localhost:8000';
 
 axios.interceptors.request.use((config) => {
     const user = JSON.parse(localStorage.getItem("user") || "{}");
@@ -24,7 +24,7 @@ interface AxiosResponse {
 }
 
 const register = async (userInfo: UserInfo) => {
-    const response: AxiosResponse = await axios.post(API_URL + "/register", {
+    const response: AxiosResponse = await axios.post(API_URL + "/auth/register", {
         fullName: userInfo.fullName,
         schoolName: userInfo.schoolName,
         email: userInfo.email,
@@ -40,7 +40,7 @@ const register = async (userInfo: UserInfo) => {
 
 const login = async (userInfo: UserInfo) => {
     const response: AxiosResponse = await axios
-        .post(API_URL + '/authenticate', {
+        .post(API_URL + '/auth/login', {
             email: userInfo.email,
             password: userInfo.password
         });
