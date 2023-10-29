@@ -8,6 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -37,7 +38,7 @@ public class PurrChaserBackendServiceApplication {
 						.userId(1)
 						.email("devbydikko@gmail.com")
 						.fullName("admin")
-						.password("password")
+						.password(new BCryptPasswordEncoder().encode("password"))
 						.authorities(roles)
 						.build();
 
@@ -50,4 +51,5 @@ public class PurrChaserBackendServiceApplication {
 					.build());
 		};
 	}
+
 }
