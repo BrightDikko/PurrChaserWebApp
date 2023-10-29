@@ -75,9 +75,9 @@ public class SecurityConfiguration {
 
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers(new AntPathRequestMatcher("/**")).permitAll(); //Allow any user to access "/auth/**" endpoint
-//                    auth.requestMatchers(new AntPathRequestMatcher("/admin/**")).hasRole("ADMIN"); //The hasRole part here is going to look for (uppercase) "ADMIN", however the AuthenticationManager is going to look for "ROLE_ADMIN"
-//                    auth.requestMatchers(new AntPathRequestMatcher("/user/**")).hasAnyRole("ADMIN", "USER");
+                    auth.requestMatchers(new AntPathRequestMatcher("/auth/**")).permitAll(); //Allow any user to access "/auth/**" endpoint
+                    auth.requestMatchers(new AntPathRequestMatcher("/admin/**")).hasRole("ADMIN"); //The hasRole part here is going to look for (uppercase) "ADMIN", however the AuthenticationManager is going to look for "ROLE_ADMIN"
+                    auth.requestMatchers(new AntPathRequestMatcher("/user/**")).hasAnyRole("ADMIN", "USER");
                     auth.anyRequest().authenticated();
                 })
                 .oauth2ResourceServer(oauth2 -> oauth2

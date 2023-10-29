@@ -66,8 +66,10 @@ const LogIn = () => {
         try {
             const loginResponse = await login(userCredentials).unwrap();
 
-            if (loginResponse.user !== null) {
-                console.log("User logged in successfully!\nUser Info:", loginResponse);
+            console.log("loginResponse:", loginResponse.user !== null);
+            console.log("!!loginResponse.user:", !!loginResponse.user);
+            if (!!loginResponse.user) {
+                console.log("User logged in successfully!\nUser Info:", loginResponse.user);
                 router.push('/');
             }
 

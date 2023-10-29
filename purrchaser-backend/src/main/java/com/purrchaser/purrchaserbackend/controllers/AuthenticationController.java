@@ -10,7 +10,6 @@ import com.purrchaser.purrchaserbackend.services.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,11 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-@CrossOrigin("*")
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
-
 
     @ExceptionHandler({EmailAlreadyTakenException.class})
     public ResponseEntity<String> handleEmailAlreadyTaken() {
@@ -36,8 +33,6 @@ public class AuthenticationController {
         return new ResponseEntity<String>("The user you are looking for does not exist", HttpStatus.NOT_FOUND);
     }
 
-
-    // go to http://localhost:8000/auth/register
     @PostMapping("/register")
     public ApplicationUser registerUser(@RequestBody RegistrationRequest registrationRequest) {
         System.out.println("Request to register user received. \nRequest: " + registrationRequest);
