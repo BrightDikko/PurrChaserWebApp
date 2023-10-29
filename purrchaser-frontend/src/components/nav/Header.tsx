@@ -5,16 +5,16 @@ import Link from 'next/link'
 import {Popover, Transition} from '@headlessui/react'
 import {
     BellIcon,
-    ChevronRightIcon,
+    ChevronRightIcon, HeartIcon,
     HomeIcon,
     PlusIcon,
     ShoppingBagIcon,
-    ShoppingCartIcon,
-    TagIcon,
+    ShoppingCartIcon, Square3Stack3DIcon, SquaresPlusIcon,
+    TagIcon, UserCircleIcon,
     UserIcon,
 } from '@heroicons/react/24/outline'
 
-import {useAppDispatch, useAppSelector} from "@/hooks/hooks";
+import {useAppDispatch, useAppSelector} from "@/hooks/store";
 import {Button} from '@/components/shared/Button'
 import {NavLink} from '@/components/shared/NavLink'
 import {Container} from '@/components/shared/Container'
@@ -187,15 +187,8 @@ const AuthenticatedMobileNavigation: React.FC<AuthenticatedHeaderProps> = ({hand
                     >
                         <MobileNavLink href="/#">
                             <div className="flex space-x-2 items-center">
-                                <span><HomeIcon className="h-5 w-5 "/> </span>
-                                <span>Home</span>
-                            </div>
-                        </MobileNavLink>
-
-                        <MobileNavLink href="/#">
-                            <div className="flex space-x-2 items-center">
-                                <span><ShoppingBagIcon className="h-5 w-5 "/> </span>
-                                <span>Shop categories</span>
+                                <span><Square3Stack3DIcon className="h-5 w-5 "/> </span>
+                                <span>My Listings</span>
                             </div>
                         </MobileNavLink>
 
@@ -205,6 +198,29 @@ const AuthenticatedMobileNavigation: React.FC<AuthenticatedHeaderProps> = ({hand
                                 <span>Sell an item</span>
                             </div>
                         </MobileNavLink>
+
+                        <MobileNavLink href="/#">
+                            <div className="flex space-x-2 items-center">
+                                <span><SquaresPlusIcon className="h-5 w-5 "/> </span>
+                                <span>Shop categories</span>
+                            </div>
+                        </MobileNavLink>
+
+                        <MobileNavLink href="/#">
+                            <div className="flex space-x-2 items-center">
+                                <span><ShoppingBagIcon className="h-5 w-5 "/> </span>
+                                <span>Purchases</span>
+                            </div>
+                        </MobileNavLink>
+
+                        <MobileNavLink href="/#">
+                            <div className="flex space-x-2 items-center">
+                                <span><HeartIcon className="h-5 w-5 "/> </span>
+                                <span>Favorites</span>
+                            </div>
+                        </MobileNavLink>
+
+                        <hr className="m-2 border-slate-300/40"/>
 
                         <MobileNavLink href="/#">
                             <div className="flex space-x-2 items-center">
@@ -223,10 +239,24 @@ const AuthenticatedMobileNavigation: React.FC<AuthenticatedHeaderProps> = ({hand
                         <MobileNavLink href="/#">
                             <div className="flex space-x-2 items-center">
                                 <span><UserIcon className="h-5 w-5 "/> </span>
-                                <span>Account</span>
+                                <span>Profile</span>
                             </div>
                         </MobileNavLink>
                         <hr className="m-2 border-slate-300/40"/>
+                        <MobileNavLink href="/login" onClick={handleLogOut}>
+                            <div className="flex space-x-2 items-center justify-between">
+                                <span>Settings</span>
+                                <span><ChevronRightIcon className="h-5 w-5 stroke-2 stroke-gray-400"/> </span>
+                            </div>
+                        </MobileNavLink>
+
+                        <MobileNavLink href="/login" onClick={handleLogOut}>
+                            <div className="flex space-x-2 items-center justify-between">
+                                <span>Help</span>
+                                <span><ChevronRightIcon className="h-5 w-5 stroke-2 stroke-gray-400"/> </span>
+                            </div>
+                        </MobileNavLink>
+
                         <MobileNavLink href="/login" onClick={handleLogOut}>
                             <div className="flex space-x-2 items-center justify-between">
                                 <span>Log out</span>
@@ -242,7 +272,8 @@ const AuthenticatedMobileNavigation: React.FC<AuthenticatedHeaderProps> = ({hand
 
 const UnauthenticatedHeader: React.FC<UnauthenticatedHeaderProps> = () => {
     return (
-        <header className="relative py-7 bg-slate-50 bg-[url('/assets/images/ND_Dome_Sketch_Cropped.png')] bg-contain bg-no-repeat bg-right bg-opacity-5 bg-blend-color-burn">
+        <header
+            className="relative py-7 bg-slate-50 bg-[url('/assets/images/ND_Dome_Sketch_Cropped.png')] bg-contain bg-no-repeat bg-right bg-opacity-5 bg-blend-color-burn">
             <div className="absolute inset-0 w-full h-full bg-slate-50 bg-opacity-80"/>
 
             <Container>
@@ -288,7 +319,8 @@ const UnauthenticatedHeader: React.FC<UnauthenticatedHeaderProps> = () => {
 
 const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps> = ({handleLogOut}) => {
     return (
-        <header className="relative py-7 bg-slate-50 bg-[url('/assets/images/ND_Dome_Sketch_Cropped.png')] bg-contain bg-no-repeat bg-right bg-opacity-5 bg-blend-color-burn">
+        <header
+            className="relative py-7 bg-slate-50 bg-[url('/assets/images/ND_Dome_Sketch_Cropped.png')] bg-contain bg-no-repeat bg-right bg-opacity-5 bg-blend-color-burn">
             <div className="absolute inset-0 w-full h-full bg-slate-50 bg-opacity-80"/>
 
             <Container>
@@ -319,19 +351,137 @@ const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps> = ({handleLogOut})
                                     <span className="hidden xl:block">Notifications</span>
                                 </div>
                             </NavLink>
+
                             <NavLink href="/#">
                                 <div className="flex space-x-1">
                                     <span><ShoppingCartIcon className="h-6 w-6" aria-hidden="true"/></span>
                                     <span className="hidden xl:block">Cart</span>
                                 </div>
                             </NavLink>
-                            <NavLink href="/#" onClick={handleLogOut}>
-                                <div
-                                    className="relative flex justify-center items-center rounded-full bg-slate-200 h-9 w-9 border-2 border-slate-300">
-                                    <div className="absolute h-2 w-2 bg-green-600 rounded-full top-0 right-0"/>
-                                    <span><UserIcon className="h-5 w-5 stroke-slate-700" aria-hidden="true"/></span>
-                                </div>
-                            </NavLink>
+
+                            <Popover>
+                                <Popover.Button
+                                    className="relative z-40 flex h-9 w-9 items-center justify-center ui-not-focus-visible:outline-none"
+                                    aria-label="Toggle Navigation"
+                                >
+                                    {/*{({open}) => <MobileNavIcon open={open}/>}*/}
+
+                                    {({open}) =>
+                                        <div
+                                            className="flex justify-center items-center rounded-full bg-slate-200 h-9 w-9 border-2 border-slate-300">
+                                            <div className="absolute h-2 w-2 bg-green-600 rounded-full top-0 right-0"/>
+                                            <span><UserIcon className="h-5 w-5 stroke-slate-700"
+                                                            aria-hidden="true"/></span>
+                                        </div>
+                                    }
+                                </Popover.Button>
+                                <Transition.Root>
+                                    <Transition.Child
+                                        as={Fragment}
+                                        enter="duration-150 ease-out"
+                                        enterFrom="opacity-0"
+                                        enterTo="opacity-100"
+                                        leave="duration-150 ease-in"
+                                        leaveFrom="opacity-100"
+                                        leaveTo="opacity-0"
+                                    >
+                                        <Popover.Overlay className="fixed inset-0 bg-slate-950/60"/>
+                                    </Transition.Child>
+                                    <Transition.Child
+                                        as={Fragment}
+                                        enter="duration-150 ease-out"
+                                        enterFrom="opacity-0 scale-95"
+                                        enterTo="opacity-100 scale-100"
+                                        leave="duration-100 ease-in"
+                                        leaveFrom="opacity-100 scale-100"
+                                        leaveTo="opacity-0 scale-95"
+                                    >
+                                        <Popover.Panel
+                                            as="div"
+                                            className="absolute w-full max-w-md right-0 mt-4 flex flex-col rounded-2xl bg-white p-4 tracking-tight text-slate-600 space-y-2 font-medium shadow-xl ring-1 ring-slate-900/5"
+                                        >
+                                            <MobileNavLink href="/#">
+                                                <div className="flex space-x-2 items-center">
+                                                    <span><Square3Stack3DIcon className="h-5 w-5 "/> </span>
+                                                    <span>My Listings</span>
+                                                </div>
+                                            </MobileNavLink>
+
+                                            <MobileNavLink href="/#">
+                                                <div className="flex space-x-2 items-center">
+                                                    <span><TagIcon className="h-5 w-5 "/> </span>
+                                                    <span>Sell an item</span>
+                                                </div>
+                                            </MobileNavLink>
+
+                                            <MobileNavLink href="/#">
+                                                <div className="flex space-x-2 items-center">
+                                                    <span><SquaresPlusIcon className="h-5 w-5 "/> </span>
+                                                    <span>Shop categories</span>
+                                                </div>
+                                            </MobileNavLink>
+
+                                            <MobileNavLink href="/#">
+                                                <div className="flex space-x-2 items-center">
+                                                    <span><ShoppingBagIcon className="h-5 w-5 "/> </span>
+                                                    <span>Purchases</span>
+                                                </div>
+                                            </MobileNavLink>
+
+                                            <MobileNavLink href="/#">
+                                                <div className="flex space-x-2 items-center">
+                                                    <span><HeartIcon className="h-5 w-5 "/> </span>
+                                                    <span>Favorites</span>
+                                                </div>
+                                            </MobileNavLink>
+
+                                            <hr className="m-2 border-slate-300/40"/>
+
+                                            <MobileNavLink href="/#">
+                                                <div className="flex space-x-2 items-center">
+                                                    <span><BellIcon className="h-5 w-5 "/> </span>
+                                                    <span>Notifications</span>
+                                                </div>
+                                            </MobileNavLink>
+
+                                            <MobileNavLink href="/#">
+                                                <div className="flex space-x-2 items-center">
+                                                    <span><ShoppingCartIcon className="h-5 w-5 "/> </span>
+                                                    <span>Cart</span>
+                                                </div>
+                                            </MobileNavLink>
+
+                                            <MobileNavLink href="/#">
+                                                <div className="flex space-x-2 items-center">
+                                                    <span><UserIcon className="h-5 w-5 "/> </span>
+                                                    <span>Profile</span>
+                                                </div>
+                                            </MobileNavLink>
+                                            <hr className="m-2 border-slate-300/40"/>
+                                            <MobileNavLink href="/login" onClick={handleLogOut}>
+                                                <div className="flex space-x-2 items-center justify-between">
+                                                    <span>Settings</span>
+                                                    <span><ChevronRightIcon className="h-5 w-5 stroke-2 stroke-gray-400"/> </span>
+                                                </div>
+                                            </MobileNavLink>
+
+                                            <MobileNavLink href="/login" onClick={handleLogOut}>
+                                                <div className="flex space-x-2 items-center justify-between">
+                                                    <span>Help</span>
+                                                    <span><ChevronRightIcon className="h-5 w-5 stroke-2 stroke-gray-400"/> </span>
+                                                </div>
+                                            </MobileNavLink>
+
+                                            <MobileNavLink href="/login" onClick={handleLogOut}>
+                                                <div className="flex space-x-2 items-center justify-between">
+                                                    <span>Log out</span>
+                                                    <span><ChevronRightIcon className="h-5 w-5 stroke-2 stroke-gray-400"/> </span>
+                                                </div>
+                                            </MobileNavLink>
+                                        </Popover.Panel>
+                                    </Transition.Child>
+                                </Transition.Root>
+                            </Popover>
                         </div>
                         <Button href="/#" color="slate" className="hidden md:flex space-x-1">
                             <span><PlusIcon className="h-6 w-6" aria-hidden="true"/></span>
@@ -346,7 +496,6 @@ const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps> = ({handleLogOut})
         </header>
     )
 }
-
 
 
 export function Header() {

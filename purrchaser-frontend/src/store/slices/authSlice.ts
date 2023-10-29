@@ -1,9 +1,9 @@
-import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import AuthService from "@/store/services/authService";
-import {UserInfo} from "@/types/UserInfo";
+import {createSlice} from "@reduxjs/toolkit";
+import {api, getCurrentUser} from "@/store/services/api";
 
 
-const user = ((typeof window !== "undefined") && (localStorage.getItem("user"))) ? JSON.parse(localStorage.getItem("user")!) : null;
+// const user = ((typeof window !== "undefined") && (localStorage.getItem("user"))) ? JSON.parse(localStorage.getItem("user")!) : null;
+// const user = null;
 
 export interface User {
     fullName: string | null;
@@ -19,81 +19,66 @@ export interface AuthState {
 }
 
 const initialState: AuthState = {
-    user: user ? user : null,
+    user: null,
     token: null,
-    isAuthenticated: user ? true : false,
+    isAuthenticated: !!getCurrentUser(),
 };
-
-
-export const register = createAsyncThunk(
-    "auth/register",
-    async (request: UserInfo, thunkAPI) => {
-        try {
-            const response = await AuthService.register(request);
-            return response.data;
-        } catch (error) {
-            console.error("An error occurred during registration: ", error);
-            return thunkAPI.rejectWithValue("Error");
-        }
-    });
-
-
-export const login = createAsyncThunk(
-    "auth/login",
-    async (request: UserInfo, thunkAPI) => {
-        try {
-            const data = await AuthService.login(request);
-            return {user: data};
-        } catch (error) {
-            console.error("An error occurred during login: ", error);
-            return thunkAPI.rejectWithValue("Error");
-        }
-    })
-
-export const logout = createAsyncThunk(
-    "auth/logout",
-    async () => {
-        await AuthService.logout();
-    });
 
 export const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        registerUser: (state, action) => {
-            state.isAuthenticated = false;
-            console.log("action: ", action);
-        },
+         updateIsAuthenticated: (state, action) => {
+             state.isAuthenticated = action.payload;
+         },
+         logoutUser: (state) => {
+            console.log("Logging out user");
 
-        loginUser: (state, action) => {
-            state.isAuthenticated = true;
-            state.user = action.payload;
-            console.log("action: ", action);
-            console.log("user: ", user);
-        },
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
 
-        logoutUser: (state) => {
-            console.log("Logging out user")
-            state.isAuthenticated = false;
             state.user = null;
+            state.token = null;
+            state.isAuthenticated = false;
         },
-
-        setCredentials: (
-            state,
-            {payload: {user, token}}: PayloadAction<{ user: User, token: string }>
-        ) => {
-            state.user = user;
-            state.token = token;
-        }
-
     },
+    extraReducers: (builder) => {
+        builder
+            // Register
+            .addMatcher(api.endpoints?.register.matchPending, (state, action) => {
+                console.log('Register pending. Action: ', action);
+            })
+            .addMatcher(api.endpoints?.register.matchFulfilled, (state, action) => {
+                console.log('Register fulfilled. Action: ', action);
+                state.isAuthenticated = false;
+            })
+            .addMatcher(api.endpoints?.register.matchRejected, (state, action) => {
+                console.log('Register rejected. Action: ', action);
+            })
+
+            // Login
+            .addMatcher(api.endpoints?.login.matchPending, (state, action) => {
+                console.log('Login pending. Action: ', action);
+            })
+            .addMatcher(api.endpoints?.login.matchFulfilled, (state, action) => {
+                console.log('Login fulfilled. Action: ', action);
+
+                localStorage.setItem("user", JSON.stringify(action.payload.user));
+                localStorage.setItem("token", JSON.stringify(action.payload.token))
+
+                state.user = action.payload.user;
+                state.token = action.payload.token;
+                state.isAuthenticated = true;
+            })
+            .addMatcher(api.endpoints?.login.matchRejected, (state, action) => {
+                console.log('Login rejected. Action: ', action);
+            })
+    }
 })
 
 export const {
-    registerUser,
-    loginUser,
+    updateIsAuthenticated,
     logoutUser,
-    setCredentials
 } = authSlice.actions;
 
 export default authSlice.reducer;

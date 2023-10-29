@@ -4,9 +4,10 @@ import React, {useEffect, useState} from "react";
 import Image from "next/image";
 import clsx from "clsx";
 import {UserInfo} from "@/types/UserInfo";
-import {useAppDispatch, useAppSelector} from "@/hooks/hooks";
+import {useAppSelector} from "@/hooks/store";
 import {useRouter} from "next/navigation";
-import {registerUser} from "@/store/slices/authSlice";
+import {useRegisterMutation} from "@/store/services/api";
+import {RegisterRequest} from "@/store/services/api";
 
 interface ValidSchools {
     school_1: string;
@@ -24,10 +25,9 @@ const VALID_SCHOOLS = {
 
 const SignUp = () => {
     const router = useRouter();
-    const dispatch = useAppDispatch();
     const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
 
-    const [loading, setLoading] = useState(false);
+    const [register, { isLoading }] = useRegisterMutation();
 
     const [enteredFullName, setEnteredFullName] = useState("");
     const [selectedSchoolKey, setSelectedSchoolKey] = useState<SchoolKeys | "DEFAULT">("DEFAULT");
@@ -36,7 +36,6 @@ const SignUp = () => {
     const [enableCreateAccountButton, setEnableCreateAccountButton] = useState(false);
 
     useEffect(() => {
-        setLoading(false);
         setEnteredFullName("");
         setSelectedSchoolKey("DEFAULT");
         setEnteredEmail("");
@@ -47,7 +46,7 @@ const SignUp = () => {
     useEffect(() => {
         if (isAuthenticated) {
             console.log("User is already registered. REDIRECTING TO HOME PAGE!");
-            router.push('/');
+            router.push('/'); // REDIRECT TO USER PROFILE PAGE WHEN READY
         }
     }, [router, isAuthenticated]);
 
@@ -84,27 +83,27 @@ const SignUp = () => {
         setEnteredPassword(event.target.value);
     }
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         if (selectedSchoolKey === "DEFAULT") {
             return;
         }
 
-        setLoading(true);
-
-        const userInfo: UserInfo = {
+        const userCredentials: RegisterRequest = {
             fullName: enteredFullName,
             schoolName: VALID_SCHOOLS[selectedSchoolKey],
             email: enteredEmail,
             password: enteredPassword
         };
 
-        dispatch(registerUser(userInfo));
-        setLoading(false);
-
-        console.log("User registered successfully!\nUser Info:", userInfo);
-        router.push('/login');
+        try {
+            const user = await register(userCredentials).unwrap();
+            console.log("User registered successfully!\nUser Info:", user);
+            router.push('/login');
+        } catch (userRegistrationError) {
+            console.error("An error occurred while attempting to register user. userRegistrationError: ", userRegistrationError);
+        }
     }
 
     return (
@@ -231,7 +230,7 @@ const SignUp = () => {
                                         "flex w-full justify-center rounded-md  px-3 py-2 text-sm font-semibold leading-6 text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                     )}
                                 >
-                                    {loading && <div role="status">
+                                    {isLoading && <div role="status">
                                         <svg aria-hidden="true"
                                              className="mt-1 h-4 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-200"
                                              viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
