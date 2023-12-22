@@ -39,10 +39,11 @@ public class AuthenticationService {
         String encodedPassword = passwordEncoder.encode(registrationRequest.getPassword());
 
         ApplicationUser user = ApplicationUser.builder()
-                .firstName(registrationRequest.getFullName())
-//                .schoolName(registrationRequest.getSchoolName())
+                .firstName(registrationRequest.getFirstName())
+                .lastName(registrationRequest.getLastName())
                 .email(registrationRequest.getEmail())
                 .password(encodedPassword)
+                .schoolId(registrationRequest.getSchoolId())
                 .build();
 
         Set<Role> roles = new HashSet<>();

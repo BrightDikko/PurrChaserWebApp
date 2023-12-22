@@ -7,8 +7,9 @@ CREATE TABLE roles
 
 CREATE TABLE schools
 (
-    school_id INT AUTO_INCREMENT PRIMARY KEY,
-    name      VARCHAR(255) NOT NULL
+    school_id    INT AUTO_INCREMENT PRIMARY KEY,
+    name         VARCHAR(255) NOT NULL,
+    email_format VARCHAR(255) NOT NULL
 );
 
 
@@ -60,7 +61,3 @@ CREATE TABLE user_dorms
     FOREIGN KEY (user_id) REFERENCES users (user_id),
     FOREIGN KEY (dorm_id) REFERENCES dorms (dorm_id)
 );
-
-INSERT INTO roles (authority)
-VALUES ('ADMIN'),
-       ('USER');
