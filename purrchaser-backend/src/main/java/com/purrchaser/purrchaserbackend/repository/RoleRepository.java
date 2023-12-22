@@ -1,6 +1,6 @@
-package com.purrchaser.purrchaserbackend.repositories;
+package com.purrchaser.purrchaserbackend.repository;
 
-import com.purrchaser.purrchaserbackend.models.Role;
+import com.purrchaser.purrchaserbackend.domain.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

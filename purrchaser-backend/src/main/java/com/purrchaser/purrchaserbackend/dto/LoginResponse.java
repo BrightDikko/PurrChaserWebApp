@@ -1,5 +1,6 @@
-package com.purrchaser.purrchaserbackend.models;
+package com.purrchaser.purrchaserbackend.dto;
 
+import com.purrchaser.purrchaserbackend.domain.ApplicationUser;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

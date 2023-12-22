@@ -61,3 +61,75 @@ CREATE TABLE user_dorms
     FOREIGN KEY (user_id) REFERENCES users (user_id),
     FOREIGN KEY (dorm_id) REFERENCES dorms (dorm_id)
 );
+
+
+CREATE TABLE primary_categories
+(
+    primary_category_id INT AUTO_INCREMENT PRIMARY KEY,
+    name                VARCHAR(255) NOT NULL
+);
+
+
+CREATE TABLE secondary_categories
+(
+    secondary_category_id INT AUTO_INCREMENT PRIMARY KEY,
+    name                  VARCHAR(255) NOT NULL,
+    primary_category_id   INT,
+    FOREIGN KEY (primary_category_id) REFERENCES primary_categories (primary_category_id)
+);
+
+
+CREATE TABLE tertiary_categories
+(
+    tertiary_category_id INT AUTO_INCREMENT PRIMARY KEY,
+    name                 VARCHAR(255) NOT NULL,
+    secondary_category_id INT,
+    FOREIGN KEY (secondary_category_id) REFERENCES secondary_categories (secondary_category_id)
+);
+
+
+CREATE TABLE listings
+(
+    listing_id       INT AUTO_INCREMENT PRIMARY KEY,
+    created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    seller_id        INT,
+    title            VARCHAR(255) NOT NULL,
+    description      TEXT,
+    price            DECIMAL(10, 2),
+    is_sold          BOOLEAN   DEFAULT FALSE,
+    item_condition   VARCHAR(100),
+    brand            VARCHAR(100),
+    model            VARCHAR(100),
+    main_image_id    INT,
+    category_id      INT,
+    meeting_location VARCHAR(255),
+    FOREIGN KEY (seller_id) REFERENCES users (user_id),
+    FOREIGN KEY (category_id) REFERENCES tertiary_categories (tertiary_category_id)
+);
+
+
+CREATE TABLE images
+(
+    image_id   INT AUTO_INCREMENT PRIMARY KEY,
+    listing_id INT,
+    url        VARCHAR(255) NOT NULL,
+    FOREIGN KEY (listing_id) REFERENCES listings (listing_id)
+);
+
+
+CREATE TABLE tags
+(
+    tag_id INT AUTO_INCREMENT PRIMARY KEY,
+    name   VARCHAR(100) UNIQUE NOT NULL
+);
+
+
+CREATE TABLE listing_tags
+(
+    listing_tag_id INT AUTO_INCREMENT PRIMARY KEY,
+    listing_id     INT,
+    tag_id         INT,
+    FOREIGN KEY (listing_id) REFERENCES listings (listing_id),
+    FOREIGN KEY (tag_id) REFERENCES tags (tag_id)
+);

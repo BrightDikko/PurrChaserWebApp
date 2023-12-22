@@ -1,4 +1,4 @@
-package com.purrchaser.purrchaserbackend.models;
+package com.purrchaser.purrchaserbackend.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

@@ -1,6 +1,6 @@
-package com.purrchaser.purrchaserbackend.services;
+package com.purrchaser.purrchaserbackend.service;
 
-import com.purrchaser.purrchaserbackend.repositories.UserRepository;
+import com.purrchaser.purrchaserbackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

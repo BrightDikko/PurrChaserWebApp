@@ -1,14 +1,14 @@
-package com.purrchaser.purrchaserbackend.services;
+package com.purrchaser.purrchaserbackend.service;
 
 import com.purrchaser.purrchaserbackend.exceptions.EmailAlreadyTakenException;
 import com.purrchaser.purrchaserbackend.exceptions.UserDoesNotExistException;
-import com.purrchaser.purrchaserbackend.models.ApplicationUser;
-import com.purrchaser.purrchaserbackend.models.LoginRequest;
-import com.purrchaser.purrchaserbackend.models.LoginResponse;
-import com.purrchaser.purrchaserbackend.models.RegistrationRequest;
-import com.purrchaser.purrchaserbackend.models.Role;
-import com.purrchaser.purrchaserbackend.repositories.RoleRepository;
-import com.purrchaser.purrchaserbackend.repositories.UserRepository;
+import com.purrchaser.purrchaserbackend.domain.ApplicationUser;
+import com.purrchaser.purrchaserbackend.dto.LoginRequest;
+import com.purrchaser.purrchaserbackend.dto.LoginResponse;
+import com.purrchaser.purrchaserbackend.dto.RegistrationRequest;
+import com.purrchaser.purrchaserbackend.domain.Role;
+import com.purrchaser.purrchaserbackend.repository.RoleRepository;
+import com.purrchaser.purrchaserbackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

@@ -1,4 +1,4 @@
-package com.purrchaser.purrchaserbackend.models;
+package com.purrchaser.purrchaserbackend.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

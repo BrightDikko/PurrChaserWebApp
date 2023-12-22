@@ -1,4 +1,4 @@
-package com.purrchaser.purrchaserbackend.models;
+package com.purrchaser.purrchaserbackend.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginRequest {
+public class RegistrationRequest {
+    private String firstName;
+    private String lastName;
     private String email;
     private String password;
+    private Integer schoolId;
 }

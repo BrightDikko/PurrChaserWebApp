@@ -1,9 +1,9 @@
 package com.purrchaser.purrchaserbackend;
 
-import com.purrchaser.purrchaserbackend.models.ApplicationUser;
-import com.purrchaser.purrchaserbackend.models.Role;
-import com.purrchaser.purrchaserbackend.repositories.RoleRepository;
-import com.purrchaser.purrchaserbackend.repositories.UserRepository;
+import com.purrchaser.purrchaserbackend.domain.ApplicationUser;
+import com.purrchaser.purrchaserbackend.domain.Role;
+import com.purrchaser.purrchaserbackend.repository.RoleRepository;
+import com.purrchaser.purrchaserbackend.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,11 +22,11 @@ public class PurrChaserBackendServiceApplication {
     @Bean
     CommandLineRunner run(RoleRepository roleRepository, UserRepository userRepository) {
         return args -> {
-			createAdminUserIfNeeded("devbydikko@gmail.com", roleRepository, userRepository);
+			createAdminUserIfNeeded("devbydikko@gmail.com", "password", roleRepository, userRepository);
         };
     }
 
-    public void createAdminUserIfNeeded(String email, RoleRepository roleRepository, UserRepository userRepository) {
+    public void createAdminUserIfNeeded(String email, String password, RoleRepository roleRepository, UserRepository userRepository) {
 		if (userRepository.findByEmail(email).isEmpty()) {
 			Role adminRole = roleRepository.findByAuthority("ADMIN").orElseThrow(
 					() -> new RuntimeException("Admin role not found")
@@ -35,7 +35,7 @@ public class PurrChaserBackendServiceApplication {
 			ApplicationUser adminUser = ApplicationUser.builder()
 					.email(email)
 					.firstName("Admin")
-					.password(new BCryptPasswordEncoder().encode("password"))
+					.password(new BCryptPasswordEncoder().encode(password))
 					.authorities(Collections.singleton(adminRole))
 					.build();
 
