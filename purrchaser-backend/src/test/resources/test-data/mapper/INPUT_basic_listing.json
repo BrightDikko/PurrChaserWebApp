@@ -1,0 +1,28 @@
+{
+  "listingId": 1,
+  "createdAt": "2023-12-22T14:16:13",
+  "updatedAt": "2023-12-22T14:16:13",
+  "seller": {
+    "userId": 2,
+    "firstName": "Horizon",
+    "lastName": "Machizel",
+    "profilePictureUrl": null,
+    "isVerified": true
+  },
+  "title": "Calculus Textbook",
+  "description": "Comprehensive calculus guide, great condition",
+  "price": 30.00,
+  "isSold": false,
+  "itemCondition": "Used",
+  "brand": null,
+  "model": null,
+  "mainImage": {
+    "imageId": null,
+    "url": null
+  },
+  "category": {
+    "tertiaryCategoryId": null,
+    "name": "Football Tickets"
+  },
+  "meetingLocation": "Library"
+}
