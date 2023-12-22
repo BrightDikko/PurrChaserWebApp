@@ -51,7 +51,7 @@ export function Testimonials() {
                     <p className="mt-4 text-lg tracking-tight text-slate-700">
                         Our marketplace experience is so enthralling that students can’t help but fall in love
                         with it. Here&apos;s what our beta users at the University of Notre Dame tri-campus had to say
-                        about PurrChaser.
+                        about XO::CLUTCH.
                     </p>
                 </div>
                 <ul

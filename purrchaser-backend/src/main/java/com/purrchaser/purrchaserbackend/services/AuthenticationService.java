@@ -39,8 +39,8 @@ public class AuthenticationService {
         String encodedPassword = passwordEncoder.encode(registrationRequest.getPassword());
 
         ApplicationUser user = ApplicationUser.builder()
-                .fullName(registrationRequest.getFullName())
-                .schoolName(registrationRequest.getSchoolName())
+                .firstName(registrationRequest.getFullName())
+//                .schoolName(registrationRequest.getSchoolName())
                 .email(registrationRequest.getEmail())
                 .password(encodedPassword)
                 .build();

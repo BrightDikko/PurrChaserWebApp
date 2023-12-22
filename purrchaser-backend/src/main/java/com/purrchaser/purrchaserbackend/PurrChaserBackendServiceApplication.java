@@ -10,46 +10,37 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Collections;
 
 @SpringBootApplication
 public class PurrChaserBackendServiceApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(PurrChaserBackendServiceApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(PurrChaserBackendServiceApplication.class, args);
+    }
 
-	@Bean
-	CommandLineRunner run(RoleRepository roleRepository, UserRepository userRepository) {
-		return args -> {
+    @Bean
+    CommandLineRunner run(RoleRepository roleRepository, UserRepository userRepository) {
+        return args -> {
+			createAdminUserIfNeeded("devbydikko@gmail.com", roleRepository, userRepository);
+        };
+    }
 
+    public void createAdminUserIfNeeded(String email, RoleRepository roleRepository, UserRepository userRepository) {
+		if (userRepository.findByEmail(email).isEmpty()) {
+			Role adminRole = roleRepository.findByAuthority("ADMIN").orElseThrow(
+					() -> new RuntimeException("Admin role not found")
+			);
 
-			if (roleRepository.findByAuthority("ADMIN").isEmpty()) {
-				Role adminRole = roleRepository.save(Role.builder()
-								.roleId(1)
-								.authority("ADMIN")
-								.build());
+			ApplicationUser adminUser = ApplicationUser.builder()
+					.email(email)
+					.firstName("Admin")
+					.password(new BCryptPasswordEncoder().encode("password"))
+					.authorities(Collections.singleton(adminRole))
+					.build();
 
-				Set<Role> roles = new HashSet<>();
-				roles.add(adminRole);
-
-				ApplicationUser admin = ApplicationUser.builder()
-						.userId(1)
-						.email("devbydikko@gmail.com")
-						.fullName("admin")
-						.password(new BCryptPasswordEncoder().encode("password"))
-						.authorities(roles)
-						.build();
-
-				userRepository.save(admin);
-			}
-
-			roleRepository.save(Role.builder()
-					.roleId(2)
-					.authority("USER")
-					.build());
-		};
-	}
+			userRepository.save(adminUser);
+		}
+    }
 
 }

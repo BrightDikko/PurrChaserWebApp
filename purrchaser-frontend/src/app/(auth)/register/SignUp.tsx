@@ -132,7 +132,7 @@ const SignUp = () => {
 
                 <div className=" sm:mx-auto sm:w-full sm:max-w-md">
                     <h2 className="text-center md:text-left  text-2xl font-bold leading-9 tracking-tight text-gray-800">
-                        Create PurrChaser Account
+                       That&apos;s clutch! Create your account
                     </h2>
                 </div>
 

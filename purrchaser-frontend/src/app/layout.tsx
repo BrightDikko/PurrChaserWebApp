@@ -11,11 +11,11 @@ import MainLayout from "@/app/layout/MainLayout";
 
 export const metadata: Metadata = {
     title: {
-        template: '%s - PurrChaser',
-        default: 'PurrChaser - Imagine a place, where the TRiBE trades',
+        template: '%s - XO::CLUTCH',
+        default: 'XO::CLUTCH - Marketplace for college campuses',
     },
     description:
-        'Imagine a place, a secured space, where your TRiBE can trade. Imagine PurrChaser',
+        "Imagine a college campus marketplace, that's xo clutch!",
 }
 
 const inter = Inter({

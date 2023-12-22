@@ -280,7 +280,7 @@ const UnauthenticatedHeader: React.FC<UnauthenticatedHeaderProps> = () => {
                 <nav className="relative z-30 flex justify-between ">
                     <div className="flex items-center md:gap-x-12">
                         <Link href="/" aria-label="Home" className="text-xl text-gray-900 font-semibold">
-                            PurrChaser
+                            XO::CLUTCH
                         </Link>
                         <div className="hidden md:flex md:gap-x-6">
                             <NavLink href="/login">Shop marketplace</NavLink>
@@ -327,7 +327,7 @@ const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps> = ({handleLogOut})
                 <nav className="relative z-50 flex space-x-4">
                     <div className="flex flex-1 items-center md:gap-x-4 space-x-3">
                         <Link href="/" aria-label="Home" className="text-xl text-gray-900 font-semibold">
-                            PurrChaser
+                            XO::CLUTCH
                         </Link>
                         <div className="h-10 md:flex flex-1 md:gap-x-6">
                             <input
