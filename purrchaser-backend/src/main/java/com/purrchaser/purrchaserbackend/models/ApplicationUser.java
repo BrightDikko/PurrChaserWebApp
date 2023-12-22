@@ -1,16 +1,7 @@
 package com.purrchaser.purrchaserbackend.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -30,21 +22,47 @@ import java.util.Set;
 public class ApplicationUser implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="user_id")
     private Integer userId;
 
-    @Column(name="full_name")
-    private String fullName;
-
-    @Column(name="school_name")
-    private String schoolName;
-
-    @Column(unique = true)
+    @Column(name="email", unique = true)
     private String email;
 
     @JsonIgnore
     private String password;
+
+    @Column(name="first_name")
+    private String firstName;
+
+    @Column(name="last_name")
+    private String lastName;
+
+    @Column(name="school_id")
+    private Integer schoolId;
+
+    @Column(name="created_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
+
+    @Column(name="updated_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updatedAt;
+
+    @Column(name="dorm_id")
+    private Integer dormId;
+
+    @Column(name="graduation_year")
+    private Integer graduationYear;
+
+    @Column(name="profile_picture_url")
+    private String profilePictureUrl;
+
+    @Column(name="bio")
+    private String bio;
+
+    @Column(name="is_verified")
+    private Boolean isVerified;
 
     @ManyToMany(fetch= FetchType.EAGER)
     @JoinTable(
