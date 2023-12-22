@@ -1,11 +1,11 @@
 package com.purrchaser.purrchaserbackend.controller;
 
-import com.purrchaser.purrchaserbackend.exceptions.EmailAlreadyTakenException;
-import com.purrchaser.purrchaserbackend.exceptions.UserDoesNotExistException;
 import com.purrchaser.purrchaserbackend.domain.ApplicationUser;
 import com.purrchaser.purrchaserbackend.dto.LoginRequest;
 import com.purrchaser.purrchaserbackend.dto.LoginResponse;
 import com.purrchaser.purrchaserbackend.dto.RegistrationRequest;
+import com.purrchaser.purrchaserbackend.exceptions.EmailAlreadyTakenException;
+import com.purrchaser.purrchaserbackend.exceptions.UserDoesNotExistException;
 import com.purrchaser.purrchaserbackend.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
