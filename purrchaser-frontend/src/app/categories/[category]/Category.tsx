@@ -84,7 +84,7 @@ const CategoryPage: React.FC<CategoryProps> = ({title}) => {
             <div className="flex flex-col space-y-6 mb-12">
                 <div>
                     <h2 className="font-medium text-sm tracking-tight text-gray-500">
-                        XO::CLUTCH{" "}{" "}{CATEGORIES_DATA[title].pathName}{" "}
+                        XO CLUTCH{" "}{" "}{CATEGORIES_DATA[title].pathName}{" "}
                         <span className="text-gray-800">{CATEGORIES_DATA[title].categoryName}</span></h2>
                 </div>
 

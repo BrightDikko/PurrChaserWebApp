@@ -9,7 +9,7 @@ export const TESTIMONIALS_DATA = [
     [
         {
             content:
-                'XO::CLUTCH is definitely a college experience game-changer... like so much ease. The platform is top-notch ☘️',
+                'XO CLUTCH is definitely a college experience game-changer... like so much ease. The platform is top-notch ☘️',
             author: {
                 name: 'Kevin Torres',
                 role: 'Junior at University of Notre Dame',
@@ -18,7 +18,7 @@ export const TESTIMONIALS_DATA = [
         },
         {
             content:
-                'The user interface is intuitive, and the platform feels safe. I could see whether users were verified or not. Kudos to the XO::CLUTCH team!',
+                'The user interface is intuitive, and the platform feels safe. I could see whether users were verified or not. Kudos to the XO CLUTCH team!',
             author: {
                 name: 'Amy Hahn',
                 role: 'Senior at University of Notre Dame',
@@ -29,7 +29,7 @@ export const TESTIMONIALS_DATA = [
     [
         {
             content:
-                'Being part of the XO::CLUTCH beta was rewarding. The platform filled a gap that was much needed on our campus. It’s like having an super luxurious market in your palms, at all times!',
+                'Being part of the XO CLUTCH beta was rewarding. The platform filled a gap that was much needed on our campus. It’s like having an super luxurious market in your palms, at all times!',
             author: {
                 name: 'Mia Brooks',
                 role: 'Sophomore at Saint Mary\'s College',
@@ -38,7 +38,7 @@ export const TESTIMONIALS_DATA = [
         },
         {
             content:
-                'From textbooks to dorm room essentials, I found everything I needed for my freshman year on XO::CLUTCH. Can’t wait for its full release.',
+                'From textbooks to dorm room essentials, I found everything I needed for my freshman year on XO CLUTCH. Can’t wait for its full release.',
             author: {
                 name: 'Lucas Grant',
                 role: 'Junior at University of Notre Dame',
@@ -49,7 +49,7 @@ export const TESTIMONIALS_DATA = [
     [
         {
             content:
-                'The in-app communication feature is a game-changer. It made negotiations smoother and safer. XO::CLUTCH has set a new standard for marketplaces.',
+                'The in-app communication feature is a game-changer. It made negotiations smoother and safer. XO CLUTCH has set a new standard for marketplaces.',
             author: {
                 name: 'Natalie Chen',
                 role: 'Junior at Holy Cross College',
@@ -58,7 +58,7 @@ export const TESTIMONIALS_DATA = [
         },
         {
             content:
-                'I had my account verified in minutes! The XO::CLUTCH support team was super responsive in getting me up and running in no time. Impressive service!',
+                'I had my account verified in minutes! The XO CLUTCH support team was super responsive in getting me up and running in no time. Impressive service!',
             author: {
                 name: 'Bella Wade',
                 role: 'Senior at University of Notre Dame',

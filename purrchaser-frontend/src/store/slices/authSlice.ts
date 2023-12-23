@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {api, getCurrentUser} from "@/store/services/api";
+import {api} from "@/store/services/api";
 
 
 // const user = ((typeof window !== "undefined") && (localStorage.getItem("user"))) ? JSON.parse(localStorage.getItem("user")!) : null;
@@ -21,19 +21,19 @@ export interface AuthState {
 const initialState: AuthState = {
     user: null,
     token: null,
-    isAuthenticated: !!getCurrentUser(),
+    isAuthenticated: false,
 };
 
 export const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-         updateIsAuthenticated: (state, action) => {
-             state.isAuthenticated = action.payload;
-         },
-         logoutUser: (state) => {
-            console.log("Logging out user");
-
+        updateAuthState: (state, action) => {
+            state.user = action.payload.user;
+            state.token = action.payload.token;
+            state.isAuthenticated = !!action.payload.user;
+        },
+        logoutUser: (state) => {
             localStorage.removeItem("token");
             localStorage.removeItem("user");
 
@@ -46,22 +46,22 @@ export const authSlice = createSlice({
         builder
             // Register
             .addMatcher(api.endpoints?.register.matchPending, (state, action) => {
-                console.log('Register pending. Action: ', action);
+                // console.log('Register pending. Action: ', action);
             })
             .addMatcher(api.endpoints?.register.matchFulfilled, (state, action) => {
-                console.log('Register fulfilled. Action: ', action);
+                // console.log('Register fulfilled. Action: ', action);
                 state.isAuthenticated = false;
             })
             .addMatcher(api.endpoints?.register.matchRejected, (state, action) => {
-                console.log('Register rejected. Action: ', action);
+                // console.log('Register rejected. Action: ', action);
             })
 
             // Login
             .addMatcher(api.endpoints?.login.matchPending, (state, action) => {
-                console.log('Login pending. Action: ', action);
+                // console.log('Login pending. Action: ', action);
             })
             .addMatcher(api.endpoints?.login.matchFulfilled, (state, action) => {
-                console.log('Login fulfilled. Action: ', action);
+                // console.log('Login fulfilled. Action: ', action);
 
                 localStorage.setItem("user", JSON.stringify(action.payload.user));
                 localStorage.setItem("token", JSON.stringify(action.payload.token))
@@ -71,13 +71,13 @@ export const authSlice = createSlice({
                 state.isAuthenticated = !!action.payload.user;
             })
             .addMatcher(api.endpoints?.login.matchRejected, (state, action) => {
-                console.log('Login rejected. Action: ', action);
+                // console.log('Login rejected. Action: ', action);
             })
     }
 })
 
 export const {
-    updateIsAuthenticated,
+    updateAuthState,
     logoutUser,
 } = authSlice.actions;
 

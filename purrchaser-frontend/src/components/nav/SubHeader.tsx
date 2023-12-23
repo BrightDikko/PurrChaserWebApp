@@ -110,7 +110,7 @@ const SubHeader = () => {
                                                                     )}
                                                                     onClick={(event) => {
                                                                         event.preventDefault();
-                                                                        console.log("index: ", index);
+                                                                        // console.log("index: ", index);
                                                                         setActiveSubCategoryLevel1(index);
                                                                         setActiveSubCategoryLevel2(0);
                                                                     }}
