@@ -11,8 +11,8 @@ import MainLayout from "@/app/layout/MainLayout";
 
 export const metadata: Metadata = {
     title: {
-        template: '%s - XO::CLUTCH',
-        default: 'XO::CLUTCH - Marketplace for college campuses',
+        template: '%s - XO CLUTCH',
+        default: 'XO CLUTCH - Marketplace for college campuses',
     },
     description:
         "Imagine a college campus marketplace, that's xo clutch!",

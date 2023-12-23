@@ -1,16 +1,19 @@
 "use client"
 
-import React, {Fragment, MouseEvent} from 'react'
+import React, {Fragment, MouseEvent, useEffect} from 'react'
 import Link from 'next/link'
 import {Popover, Transition} from '@headlessui/react'
 import {
     BellIcon,
-    ChevronRightIcon, HeartIcon,
+    ChevronRightIcon,
+    HeartIcon,
     HomeIcon,
     PlusIcon,
     ShoppingBagIcon,
-    ShoppingCartIcon, Square3Stack3DIcon, SquaresPlusIcon,
-    TagIcon, UserCircleIcon,
+    ShoppingCartIcon,
+    Square3Stack3DIcon,
+    SquaresPlusIcon,
+    TagIcon,
     UserIcon,
 } from '@heroicons/react/24/outline'
 
@@ -18,8 +21,9 @@ import {useAppDispatch, useAppSelector} from "@/hooks/store";
 import {Button} from '@/components/shared/Button'
 import {NavLink} from '@/components/shared/NavLink'
 import {Container} from '@/components/shared/Container'
-import {logoutUser} from "@/store/slices/authSlice";
+import {logoutUser, updateAuthState} from "@/store/slices/authSlice";
 import SubHeader from "@/components/nav/SubHeader";
+import {getCurrentUser} from "@/store/services/api";
 
 type MobileNavLinkProps = {
     href: string;
@@ -280,7 +284,7 @@ const UnauthenticatedHeader: React.FC<UnauthenticatedHeaderProps> = () => {
                 <nav className="relative z-30 flex justify-between ">
                     <div className="flex items-center md:gap-x-12">
                         <Link href="/" aria-label="Home" className="text-xl text-gray-900 font-semibold">
-                            XO::CLUTCH
+                            XO CLUTCH
                         </Link>
                         <div className="hidden md:flex md:gap-x-6">
                             <NavLink href="/login">Shop marketplace</NavLink>
@@ -327,7 +331,22 @@ const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps> = ({handleLogOut})
                 <nav className="relative z-50 flex space-x-4">
                     <div className="flex flex-1 items-center md:gap-x-4 space-x-3">
                         <Link href="/" aria-label="Home" className="text-xl text-gray-900 font-semibold">
-                            XO::CLUTCH
+                            <h2 className="text-center md:text-left text-2xl font-bold leading-9 tracking-tight text-gray-800">
+                               <span
+                                   className="relative whitespace-nowrap text-indigo-700 outline-1 outline-amber-50 mr-2">
+                                    <svg
+                                        aria-hidden="true"
+                                        viewBox="0 0 418 42"
+                                        className="absolute left-0 top-2/3 h-[0.58em] w-full fill-indigo-700/60"
+                                        preserveAspectRatio="none"
+                                    >
+                                        <path
+                                            d="M203.371.916c-26.013-2.078-76.686 1.963-124.73 9.946L67.3 12.749C35.421 18.062 18.2 21.766 6.004 25.934 1.244 27.561.828 27.778.874 28.61c.07 1.214.828 1.121 9.595-1.176 9.072-2.377 17.15-3.92 39.246-7.496C123.565 7.986 157.869 4.492 195.942 5.046c7.461.108 19.25 1.696 19.17 2.582-.107 1.183-7.874 4.31-25.75 10.366-21.992 7.45-35.43 12.534-36.701 13.884-2.173 2.308-.202 4.407 4.442 4.734 2.654.187 3.263.157 15.593-.78 35.401-2.686 57.944-3.488 88.365-3.143 46.327.526 75.721 2.23 130.788 7.584 19.787 1.924 20.814 1.98 24.557 1.332l.066-.011c1.201-.203 1.53-1.825.399-2.335-2.911-1.31-4.893-1.604-22.048-3.261-57.509-5.556-87.871-7.36-132.059-7.842-23.239-.254-33.617-.116-50.627.674-11.629.54-42.371 2.494-46.696 2.967-2.359.259 8.133-3.625 26.504-9.81 23.239-7.825 27.934-10.149 28.304-14.005.417-4.348-3.529-6-16.878-7.066Z"/>
+                                    </svg>
+                                    <span className="relative">XO CLUTCH</span>
+                                </span>
+                            </h2>
+
                         </Link>
                         <div className="h-10 md:flex flex-1 md:gap-x-6">
                             <input
@@ -461,21 +480,24 @@ const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps> = ({handleLogOut})
                                             <MobileNavLink href="/login" onClick={handleLogOut}>
                                                 <div className="flex space-x-2 items-center justify-between">
                                                     <span>Settings</span>
-                                                    <span><ChevronRightIcon className="h-5 w-5 stroke-2 stroke-gray-400"/> </span>
+                                                    <span><ChevronRightIcon
+                                                        className="h-5 w-5 stroke-2 stroke-gray-400"/> </span>
                                                 </div>
                                             </MobileNavLink>
 
                                             <MobileNavLink href="/login" onClick={handleLogOut}>
                                                 <div className="flex space-x-2 items-center justify-between">
                                                     <span>Help</span>
-                                                    <span><ChevronRightIcon className="h-5 w-5 stroke-2 stroke-gray-400"/> </span>
+                                                    <span><ChevronRightIcon
+                                                        className="h-5 w-5 stroke-2 stroke-gray-400"/> </span>
                                                 </div>
                                             </MobileNavLink>
 
                                             <MobileNavLink href="/login" onClick={handleLogOut}>
                                                 <div className="flex space-x-2 items-center justify-between">
                                                     <span>Log out</span>
-                                                    <span><ChevronRightIcon className="h-5 w-5 stroke-2 stroke-gray-400"/> </span>
+                                                    <span><ChevronRightIcon
+                                                        className="h-5 w-5 stroke-2 stroke-gray-400"/> </span>
                                                 </div>
                                             </MobileNavLink>
                                         </Popover.Panel>
@@ -502,9 +524,19 @@ export function Header() {
     const dispatch = useAppDispatch();
     const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
 
+    useEffect(() => {
+        const currentUser = getCurrentUser();
+        const token = localStorage.getItem("token");
+        if (currentUser) {
+            dispatch(updateAuthState({
+                user: currentUser,
+                token: token
+            }))
+        }
+    }, [dispatch]);
+
     const handleLogOut = () => {
         dispatch(logoutUser());
-        console.log("User successfully logged out!")
     }
 
     return (
