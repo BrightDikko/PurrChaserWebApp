@@ -1,16 +1,16 @@
 package com.purrchaser.purrchaserbackend.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "primary_categories")
-@Data
+@Getter
+@Setter
+@ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,7 +24,20 @@ public class PrimaryCategory {
     @Column(nullable = false, name = "name")
     private String name;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "primaryCategory")
     private List<SecondaryCategory> secondaryCategories;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PrimaryCategory that = (PrimaryCategory) o;
+        return Objects.equals(primaryCategoryId, that.primaryCategoryId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(primaryCategoryId);
+    }
 }

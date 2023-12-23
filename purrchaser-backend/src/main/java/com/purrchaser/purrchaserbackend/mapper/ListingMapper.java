@@ -1,11 +1,11 @@
 package com.purrchaser.purrchaserbackend.mapper;
 
 import com.purrchaser.purrchaserbackend.domain.Listing;
-import com.purrchaser.purrchaserbackend.dto.CategoryDTO;
 import com.purrchaser.purrchaserbackend.dto.CreateListingRequest;
 import com.purrchaser.purrchaserbackend.dto.ImageDTO;
 import com.purrchaser.purrchaserbackend.dto.ListingDTO;
 import com.purrchaser.purrchaserbackend.dto.SellerDTO;
+import com.purrchaser.purrchaserbackend.dto.TertiaryCategoryDTO;
 import com.purrchaser.purrchaserbackend.service.ListingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -43,7 +43,7 @@ public class ListingMapper {
                 .url(listing.getMainImage().getUrl())
                 .build();
 
-        CategoryDTO categoryDTO = CategoryDTO.builder()
+        TertiaryCategoryDTO tertiaryCategoryDTO = TertiaryCategoryDTO.builder()
                 .tertiaryCategoryId(listing.getListingId())
                 .name(listing.getCategory().getName())
                 .build();
@@ -61,7 +61,7 @@ public class ListingMapper {
                 .brand(listing.getBrand())
                 .model(listing.getModel())
                 .image(imageDTO)
-                .category(categoryDTO)
+                .category(tertiaryCategoryDTO)
                 .meetingLocation(listing.getMeetingLocation())
                 .build();
     }
