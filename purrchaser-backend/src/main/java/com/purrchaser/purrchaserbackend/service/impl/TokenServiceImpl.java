@@ -20,6 +20,7 @@ public class TokenServiceImpl implements TokenService {
     private final JwtEncoder jwtEncoder;
     private final JwtDecoder jwtDecoder;
 
+    @Override
     public String generateJwt(Authentication auth) {
 
         Instant now = Instant.now();

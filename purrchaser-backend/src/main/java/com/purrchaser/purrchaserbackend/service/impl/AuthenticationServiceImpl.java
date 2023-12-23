@@ -36,6 +36,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
 
+    @Override
     public ApplicationUser registerUser(RegistrationRequest registrationRequest) {
 
         String encodedPassword = passwordEncoder.encode(registrationRequest.getPassword());
@@ -72,6 +73,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     }
 
+    @Override
     public LoginResponse loginUser(LoginRequest loginRequest) {
 
         try {

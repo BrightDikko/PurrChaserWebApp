@@ -2,6 +2,7 @@ package com.purrchaser.purrchaserbackend.mapper;
 
 import com.purrchaser.purrchaserbackend.domain.Listing;
 import com.purrchaser.purrchaserbackend.dto.CategoryDTO;
+import com.purrchaser.purrchaserbackend.dto.CreateListingRequest;
 import com.purrchaser.purrchaserbackend.dto.ImageDTO;
 import com.purrchaser.purrchaserbackend.dto.ListingDTO;
 import com.purrchaser.purrchaserbackend.dto.SellerDTO;
@@ -22,6 +23,11 @@ public class ListingMapper {
         return listings.map(this::convertToListingDTO);
     }
 
+    public ListingDTO createListing(CreateListingRequest createListingRequest) {
+        Listing newlyCreatedListing = listingService.createNewListing(createListingRequest);
+        return convertToListingDTO(newlyCreatedListing);
+    }
+
     public ListingDTO convertToListingDTO(Listing listing) {
         SellerDTO sellerDTO = SellerDTO.builder()
                 .userId(listing.getSeller().getUserId())
@@ -31,9 +37,14 @@ public class ListingMapper {
                 .isVerified(listing.getSeller().getIsVerified())
                 .build();
 
-        ImageDTO imageDTO = ImageDTO.builder().build();
+        ImageDTO imageDTO = ImageDTO.builder()
+                .imageId(listing.getMainImage().getImageId())
+                .listingId(listing.getListingId())
+                .url(listing.getMainImage().getUrl())
+                .build();
 
         CategoryDTO categoryDTO = CategoryDTO.builder()
+                .tertiaryCategoryId(listing.getListingId())
                 .name(listing.getCategory().getName())
                 .build();
 
