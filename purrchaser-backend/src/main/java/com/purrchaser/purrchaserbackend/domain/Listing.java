@@ -62,4 +62,15 @@ public class Listing {
     private TertiaryCategory category;
 
     private String meetingLocation;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = new Timestamp(System.currentTimeMillis());;
+        updatedAt = new Timestamp(System.currentTimeMillis());;
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = new Timestamp(System.currentTimeMillis());
+    }
 }
