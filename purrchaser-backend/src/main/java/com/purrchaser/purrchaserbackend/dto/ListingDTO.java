@@ -1,9 +1,5 @@
 package com.purrchaser.purrchaserbackend.dto;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.purrchaser.purrchaserbackend.domain.ApplicationUser;
-import com.purrchaser.purrchaserbackend.domain.Image;
-import com.purrchaser.purrchaserbackend.domain.TertiaryCategory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,6 +25,6 @@ public class ListingDTO {
     private String brand;
     private String model;
     private ImageDTO image;
-    private CategoryDTO category;
+    private TertiaryCategoryDTO category;
     private String meetingLocation;
 }

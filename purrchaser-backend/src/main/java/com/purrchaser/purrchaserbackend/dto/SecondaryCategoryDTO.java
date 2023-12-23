@@ -5,12 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryDTO {
-    private Integer tertiaryCategoryId;
-    private String name;
+public class SecondaryCategoryDTO {
     private Integer secondaryCategoryId;
+    private String name;
+    private List<TertiaryCategoryDTO> tertiaryCategories;
 }
+

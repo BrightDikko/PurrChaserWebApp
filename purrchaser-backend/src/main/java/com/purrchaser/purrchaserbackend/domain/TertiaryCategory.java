@@ -4,13 +4,19 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "tertiary_categories")
-@Data
+@Getter
+@Setter
+@ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,4 +37,16 @@ public class TertiaryCategory {
     @OneToMany(mappedBy = "category")
     private List<Listing> listings;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TertiaryCategory that = (TertiaryCategory) o;
+        return Objects.equals(tertiaryCategoryId, that.tertiaryCategoryId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tertiaryCategoryId);
+    }
 }
