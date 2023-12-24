@@ -1,10 +1,6 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {api} from "@/store/services/api";
 
-
-// const user = ((typeof window !== "undefined") && (localStorage.getItem("user"))) ? JSON.parse(localStorage.getItem("user")!) : null;
-// const user = null;
-
 export interface User {
     fullName: string | null;
     schoolName: string | null;
@@ -12,13 +8,13 @@ export interface User {
     password: string;
 }
 
-export interface AuthState {
+export interface AuthSliceState {
     user: User | null;
     token: string | null;
     isAuthenticated: boolean;
 }
 
-const initialState: AuthState = {
+const initialState: AuthSliceState = {
     user: null,
     token: null,
     isAuthenticated: false,

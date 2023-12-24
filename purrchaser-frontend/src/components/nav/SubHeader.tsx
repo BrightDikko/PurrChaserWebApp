@@ -1,17 +1,151 @@
 import React, {Fragment, useEffect, useState} from "react";
 import {Container} from "@/components/shared/Container";
-import {FULL_CATEGORIES_DATA, MAIN_CATEGORIES_DATA} from "@/data/listings/Categories";
+import {MAIN_CATEGORIES_DATA} from "@/data/listings/Categories";
 import {NavLink} from "@/components/shared/NavLink";
 import {Menu, Transition} from "@headlessui/react";
 import {ChevronRightIcon} from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import {useRouter} from "next/navigation";
+import {useGetAllCategoriesQuery} from "@/store/services/api";
+import {useAppDispatch} from "@/hooks/store";
+import {
+    formatCategoryNameLikeInHrefSlug,
+    PrimaryCategory,
+    SecondaryCategory,
+    setCategories,
+    TertiaryCategory
+} from "@/store/slices/categoriesSlice";
+
+// Skeleton Loader Component
+const SkeletonNavLink = () => {
+    return (
+        <div className="animate-pulse p-1 sm:p-2">
+            <div className="bg-gray-300 h-8  rounded-md"></div>
+        </div>
+    );
+};
 
 const SubHeader = () => {
     const router = useRouter();
 
-    const [activeSubCategoryLevel1, setActiveSubCategoryLevel1 ] = useState(0);
-    const [activeSubCategoryLevel2, setActiveSubCategoryLevel2 ] = useState(0);
+    const dispatch = useAppDispatch();
+
+    const [activeSubCategoryLevel1, setActiveSubCategoryLevel1] = useState(0);
+    const [activeSubCategoryLevel2, setActiveSubCategoryLevel2] = useState(0);
+
+    const {data: categories, error, isLoading} = useGetAllCategoriesQuery();
+
+    useEffect(() => {
+        if (categories) {
+            dispatch(setCategories(categories));
+        }
+    }, [categories, dispatch]);
+
+    const renderPrimaryNavLinks = () => {
+        if (isLoading) {
+            return Array.from({length: 5}, (_, index) => <SkeletonNavLink key={index}/>);
+        } else {
+            return (
+                <>
+                    {categories.map((category: PrimaryCategory, index: number) => (
+                        <Menu.Item key={category.name}>
+                            {({}) => (
+                                <a
+                                    className={clsx(
+                                        index === activeSubCategoryLevel1 ? 'font-semibold text-gray-900 bg-gray-200' : 'text-gray-500',
+                                        'flex items-center justify-between pl-3 pr-2 py-2 text-xs sm:text-sm',
+                                    )}
+                                    onClick={(event) => {
+                                        event.preventDefault();
+                                        // console.log("index: ", index);
+                                        setActiveSubCategoryLevel1(index);
+                                        setActiveSubCategoryLevel2(0);
+                                    }}
+                                >
+                                    <span>{category.name}</span>
+                                    <span className={clsx(
+                                        index === activeSubCategoryLevel1 ? "block" : "hidden"
+                                    )}><ChevronRightIcon className="h-4 w-4 stroke-2"/> </span>
+                                </a>
+                            )}
+                        </Menu.Item>
+                    ))}
+                </>
+            )
+        }
+    };
+
+    const renderSecondaryNavLinks = () => {
+        if (isLoading) {
+            return Array.from({length: 5}, (_, index) => <SkeletonNavLink key={index}/>);
+        } else {
+            return (
+                <>
+                    {categories[activeSubCategoryLevel1].secondaryCategories.map((category: SecondaryCategory, index: number) => (
+                        <Menu.Item key={category.name}>
+                            {({}) => (
+                                <a
+                                    className={clsx(
+                                        index === activeSubCategoryLevel2 ? 'font-semibold text-gray-900' : 'text-gray-500',
+                                        'flex items-center justify-between pl-3 pr-2 py-2 text-xs sm:text-sm',
+                                    )}
+                                    onClick={(event) => {
+                                        event.preventDefault();
+                                        setActiveSubCategoryLevel2(index);
+                                    }}
+                                >
+                                    <span>{category.name}</span>
+                                    <span className={clsx(
+                                        index === activeSubCategoryLevel2 ? "block" : "hidden"
+                                    )}><ChevronRightIcon className="h-4 w-4 stroke-2"/> </span>
+                                </a>
+                            )}
+                        </Menu.Item>
+                    ))}
+                </>
+            )
+        }
+    };
+
+    const renderTertiaryNavLinks = () => {
+        if (isLoading) {
+            return Array.from({length: 5}, (_, index) => <SkeletonNavLink key={index}/>);
+        } else {
+            return (
+                <>
+                    {categories[activeSubCategoryLevel1].secondaryCategories[activeSubCategoryLevel2].tertiaryCategories.map((category: TertiaryCategory) => (
+                        <Menu.Item key={category.name}>
+                            {({active}) => (
+                                <a
+                                    className={clsx(
+                                        'text-gray-500',
+                                        active ? 'font-medium text-indigo-500' : '',
+                                        'flex items-center justify-between pl-3 pr-2 py-2 text-xs sm:text-sm',
+                                    )}
+                                    onClick={(event) => {
+                                        event.preventDefault();
+                                        router.push(`/categories/${formatCategoryNameLikeInHrefSlug(category.name)}`);
+                                    }}
+                                >
+                                    {category.name}
+                                </a>
+                            )}
+                        </Menu.Item>
+                    ))}
+                </>
+            )
+        }
+    };
+
+    if (isLoading) {
+        // console.log("\nCategories loading");
+    }
+
+    if (error) {
+        console.log("\nAn error occurred while fetching categories");
+        console.error("error:", error);
+        return;
+    }
 
     return (
         <header className="py-4 z-10 bg-gradient-to-r from-[#002f87] to-[#0c2340]">
@@ -97,82 +231,25 @@ const SubHeader = () => {
                                         className="absolute left-0 z-10 mt-2 origin-top-right w-full rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
 
                                         <div className="flex flex-col w-full py-5 ">
-                                            <div className="block px-6 font-medium text-gray-500 text-sm ">All Categories</div>
-                                            <div className="flex mt-2 w-full py-2 pl-3 ">
+                                            <div className="block px-6 font-medium text-gray-500 text-sm ">
+                                                All Categories
+                                            </div>
+                                            <div className="flex mt-2 w-full py-2 px-2 sm:pl-3">
                                                 <div className="flex-1">
-                                                    {FULL_CATEGORIES_DATA.map((category, index) => (
-                                                        <Menu.Item key={category.title}>
-                                                            {({}) => (
-                                                                <a
-                                                                    className={clsx(
-                                                                        index === activeSubCategoryLevel1 ? 'font-semibold text-gray-900 bg-gray-200' : 'text-gray-500',
-                                                                        'flex items-center justify-between pl-3 pr-2 py-2 text-sm',
-                                                                    )}
-                                                                    onClick={(event) => {
-                                                                        event.preventDefault();
-                                                                        // console.log("index: ", index);
-                                                                        setActiveSubCategoryLevel1(index);
-                                                                        setActiveSubCategoryLevel2(0);
-                                                                    }}
-                                                                >
-                                                                    <span>{category.title}</span>
-                                                                    <span className={clsx(
-                                                                        index === activeSubCategoryLevel1 ? "block" : "hidden"
-                                                                    )}><ChevronRightIcon className="h-4 w-4 stroke-2" /> </span>
-                                                                </a>
-                                                            )}
-                                                        </Menu.Item>
-                                                    ))}
+                                                    {renderPrimaryNavLinks()}
                                                 </div>
 
                                                 <div className="bg-black/20 flex flex-col w-[1px] h-auto"/>
 
                                                 <div className="flex-1">
-                                                    {FULL_CATEGORIES_DATA[activeSubCategoryLevel1].subCategories1.map((category, index) => (
-                                                        <Menu.Item key={category.title}>
-                                                            {({}) => (
-                                                                <a
-                                                                    className={clsx(
-                                                                        index === activeSubCategoryLevel2 ? 'font-semibold text-gray-900' : 'text-gray-500',
-                                                                        'flex items-center justify-between pl-3 pr-2 py-2 text-sm',
-                                                                    )}
-                                                                    onClick={(event) => {
-                                                                        event.preventDefault();
-                                                                        setActiveSubCategoryLevel2(index);
-                                                                    }}
-                                                                >
-                                                                    <span >{category.title}</span>
-                                                                    <span className={clsx(
-                                                                        index === activeSubCategoryLevel2 ? "block" : "hidden"
-                                                                    )}><ChevronRightIcon className="h-4 w-4 stroke-2" /> </span>
-                                                                </a>
-                                                            )}
-                                                        </Menu.Item>
-                                                    ))}
+                                                    {renderSecondaryNavLinks()}
                                                 </div>
 
                                                 <div className="bg-black/20 flex flex-col w-[1px] h-auto"/>
 
+
                                                 <div className="flex-1">
-                                                    {FULL_CATEGORIES_DATA[activeSubCategoryLevel1].subCategories1[activeSubCategoryLevel2].subCategories2.map((category) => (
-                                                        <Menu.Item key={category.title}>
-                                                            {({active}) => (
-                                                                <a
-                                                                    className={clsx(
-                                                                        'text-gray-500',
-                                                                        active ? 'font-medium text-indigo-500' : '',
-                                                                        'flex items-center justify-between pl-3 pr-2 py-2 text-sm ',
-                                                                    )}
-                                                                    onClick={(event) => {
-                                                                        event.preventDefault();
-                                                                        router.push(category.href);
-                                                                    }}
-                                                                >
-                                                                    {category.title}
-                                                                </a>
-                                                            )}
-                                                        </Menu.Item>
-                                                    ))}
+                                                    {renderTertiaryNavLinks()}
                                                 </div>
                                             </div>
                                         </div>

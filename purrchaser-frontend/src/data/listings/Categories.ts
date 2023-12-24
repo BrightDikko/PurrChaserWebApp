@@ -5,33 +5,33 @@ export const MAIN_CATEGORIES_DATA = [
         current: true,
     },
     {
-        title: "Books",
-        href: "/categories/books",
-        current: false,
-    },
-    {
         title: "Laptops",
         href: "/categories/laptops",
         current: false,
     },
     {
-        title: "Phones",
-        href: "/categories/phones",
+        title: "Tablets",
+        href: "/categories/tablets",
         current: false,
     },
     {
-        title: "Furniture",
-        href: "/categories/furniture",
+        title: "E-readers",
+        href: "/categories/e-readers",
         current: false,
     },
     {
-        title: "Arts & Crafts",
-        href: "/categories/arts-and-crafts",
+        title: "Cameras",
+        href: "/categories/cameras",
         current: false,
     },
     {
-        title: "Winter Gear",
-        href: "/categories/winter-gear",
+        title: "Gaming Consoles",
+        href: "/categories/gaming-consoles",
+        current: false,
+    },
+    {
+        title: "VR Headsets",
+        href: "/categories/vr-headsets",
         current: false,
     },
     {
@@ -40,8 +40,8 @@ export const MAIN_CATEGORIES_DATA = [
         current: false,
     },
     {
-        title: "Kitchen Utensils",
-        href: "/categories/kitchen-utensils",
+        title: "Bus and Shuttle Passes",
+        href: "/categories/bus-and-shuttle-passes",
         current: false,
     },
 ]
