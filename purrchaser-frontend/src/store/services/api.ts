@@ -50,14 +50,6 @@ export const api = createApi({
     baseQuery: baseQueryWithRetry,
     tagTypes: [],
     endpoints: (builder) => ({
-        getAllCategories: builder.query({
-            query: () => ({
-                url: "/categories",
-                method: "GET"
-            }),
-            keepUnusedDataFor: 60 * 60 * 24  // 24 hours in seconds, specific to this endpoint
-        }),
-
         register: builder.mutation<UserResponse, RegisterRequest>({
             query: (credentials) => ({
                 url: "/auth/register",
@@ -72,12 +64,28 @@ export const api = createApi({
                 method: "POST",
                 body: credentials
             })
+        }),
+
+        getAllCategories: builder.query({
+            query: () => ({
+                url: "/categories",
+                method: "GET"
+            }),
+            keepUnusedDataFor: 60 * 60 * 24  // 24 hours in seconds, specific to this endpoint
+        }),
+
+        getAllListings: builder.query({
+            query: () => ({
+                url: "/listings/all",
+                method: "GET"
+            })
         })
     }),
 })
 
 export const {
-    useGetAllCategoriesQuery,
     useRegisterMutation,
-    useLoginMutation
+    useLoginMutation,
+    useGetAllCategoriesQuery,
+    useGetAllListingsQuery
 } = api;

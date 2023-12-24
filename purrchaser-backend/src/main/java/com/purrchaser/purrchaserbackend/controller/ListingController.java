@@ -23,7 +23,7 @@ public class ListingController {
     private final ListingMapper listingMapper;
 
     @GetMapping("/all")
-    public ResponseEntity<Page<ListingDTO>> getAllListings(@PageableDefault(size = 5) Pageable pageable) {
+    public ResponseEntity<Page<ListingDTO>> getAllListings(@PageableDefault(size = 24) Pageable pageable) {
         return ResponseEntity.ok(listingMapper.getAllListings(pageable));
     }
 

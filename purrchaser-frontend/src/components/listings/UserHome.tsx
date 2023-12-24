@@ -1,18 +1,43 @@
 "use client"
 
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Container} from "@/components/shared/Container";
 import {FOOTBALL_TICKETS_DATA, TEXT_BOOKS_DATA, WINTER_GEAR_DATA} from "@/data/listings/SingleAvailableForSale";
 import SingleAvailableForSaleSection from "@/components/listings/SingleAvailableForSaleSection";
 import HomeNavTabs from "@/components/nav/HomeNavTabs";
 import {useRouter} from "next/navigation";
+import {useGetAllListingsQuery} from "@/store/services/api";
+import {ALL} from "dns";
+import {NavLink} from "@/components/shared/NavLink";
+import {useAppDispatch} from "@/hooks/store";
+import {setAllListings} from "@/store/slices/listingsSlice";
 
 const products = [...FOOTBALL_TICKETS_DATA, ...WINTER_GEAR_DATA, ...TEXT_BOOKS_DATA]
 
 export default function UserHome() {
     const router = useRouter();
 
+    const dispatch = useAppDispatch();
+
     const [activeTab, setActiveTab] = useState(1);
+
+    const {data: ALL_LISTINGS_DATA, error, isLoading} = useGetAllListingsQuery();
+
+    useEffect(() => {
+        if (ALL_LISTINGS_DATA) {
+            dispatch(setAllListings(ALL_LISTINGS_DATA));
+        }
+    }, [ALL_LISTINGS_DATA, dispatch]);
+
+    if (isLoading) {
+        console.log("IS LOADING ALL_LISTINGS_DATA ");
+        return;
+    }
+
+    if (error) {
+        console.log("\nAN ERROR OCCURRED WHILE FETCHING ALL_LISTINGS_DATA ");
+        console.error("Error: ", error);
+    }
 
     const updateActiveTabHandler = (value: number) => {
         setActiveTab(value);
@@ -32,37 +57,41 @@ export default function UserHome() {
 
             {activeTab === 3 ?
                 <div className="">
-                    <SingleAvailableForSaleSection sectionTitle={"Football Tickets"} productsList={FOOTBALL_TICKETS_DATA}/>
+                    <SingleAvailableForSaleSection sectionTitle={"Football Tickets"}
+                                                   productsList={FOOTBALL_TICKETS_DATA}/>
                     <SingleAvailableForSaleSection sectionTitle={"Text Books"} productsList={TEXT_BOOKS_DATA}/>
                     <SingleAvailableForSaleSection sectionTitle={"Winter Jackets"} productsList={WINTER_GEAR_DATA}/>
                 </div>
                 :
                 <div
-                className="mb-10 mt-6 pt-2 grid grid-cols-2 gap-x-3.5 sm:gap-x-5 gap-y-7 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 ">
-                {products.map((product, productIndex) => (
-                    <div key={productIndex} className="group relative px-1">
-                        <div
-                            className="h-40 w-full overflow-hidden rounded-md bg-gray-200 aspect-square group-hover:opacity-90">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                                src={product.imageSrc}
-                                alt={product.imageAlt}
-                                className="object-cover object-center w-full h-full rounded-md "
-                            />
-                        </div>
-                        <h3 className="mt-2 text-sm text-gray-700">
-                            <a onClick={(event) => {
-                                event.preventDefault();
-                                router.push(product.href);
-                            }}>
-                                <span className="absolute inset-0"/>
-                                {product.name}
-                            </a>
-                        </h3>
-                        <p className="text-sm font-semibold text-gray-900">{product.price}</p>
-                    </div>
-                ))}
-            </div>}
+                    className="-ml-1 sm:-ml-2 mb-10 mt-6 mx-auto pt-2 grid grid-cols-2 gap-x-3.5 sm:gap-x-5 gap-y-7 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 ">
+                    {ALL_LISTINGS_DATA.content.map((listing, listingIndex: number) => (
+                        <NavLink
+                            key={listingIndex}
+                            href={`/listings/${listing.listingId}`}
+                        >
+                            <div className="group relative sm:px-1 w-40 md:w-48">
+                                <div className="h-40 w-full overflow-hidden rounded-md bg-gray-200 aspect-square group-hover:opacity-90">
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img
+                                        src={listing.image.url}
+                                        alt={`Image of ${listing.title}`}
+                                        className="object-cover object-center w-full h-full rounded-md"
+                                        style={{ objectFit: 'cover', height: '100%' }}
+                                    />
+                                </div>
+
+                                <div className="mt-2 h-12">
+                                    <p className="text-sm text-gray-700 h-6 max-w-full overflow-hidden line-clamp-1">
+                                        {listing.title}
+                                    </p>
+                                    <p className="text-sm font-semibold text-gray-900">${listing.price.toFixed(2)}</p>
+                                </div>
+                            </div>
+
+                        </NavLink>
+                    ))}
+                </div>}
 
         </Container>
     )
