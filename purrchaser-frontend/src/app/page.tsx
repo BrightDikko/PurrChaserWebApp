@@ -7,33 +7,49 @@ import {Testimonials} from "@/components/hero/Testimonials";
 import {Footer} from "@/components/nav/Footer";
 import RecentlyPurchased from "@/components/listings/RecentlyPurchased";
 import AvailableForSale from "@/components/listings/AvailableForSale";
-import {Provider} from "react-redux";
-import {store} from "@/store/store";
-import {useAppSelector} from "@/hooks/store";
+import {useAppDispatch, useAppSelector} from "@/hooks/store";
 import UserHome from "@/components/listings/UserHome";
-import Category from "@/app/categories/[category]/Category";
-import React from "react";
+import React, {useEffect, useState} from "react";
+import {getCurrentUser} from "@/store/services/api";
+import {updateAuthState} from "@/store/slices/authSlice";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
 
 export default function Home() {
-
     const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
+    const [isLoading, setIsLoading] = useState(true);
+    const [showTestimonialsAndFooter, setShowTestimonialsAndFooter] = useState(false);
+
+    const handleLoadingUpdate = (loadingStatus: boolean) => {
+        setIsLoading(loadingStatus);
+        setTimeout(() => {
+            setShowTestimonialsAndFooter(true);
+        }, 50); // 50 Milliseconds delay
+    }
 
     return (
         <>
-            <Header/>
-            <main>
-                {!isAuthenticated &&
-                    <>
-                        <Hero/>
-                        <Trending/>
-                        <RecentlyPurchased/>
-                        <AvailableForSale/>
-                    </>
-                }
-                {isAuthenticated && <UserHome/>}
-                <Testimonials/>
-            </main>
-            <Footer/>
+            <Header updateIsLoading={handleLoadingUpdate}/>
+            {isLoading ? (
+                <LoadingSpinner/>
+            ) : (
+                <>
+                    <main>
+                        {isAuthenticated ? (
+                            <UserHome/>
+                        ) : (
+                            <>
+                                <Hero/>
+                                <Trending/>
+                                <RecentlyPurchased/>
+                                <AvailableForSale/>
+                            </>
+                        )}
+                        {showTestimonialsAndFooter && <Testimonials/>}
+                    </main>
+                    {showTestimonialsAndFooter && <Footer/>}
+                </>
+            )}
         </>
     )
 }
+

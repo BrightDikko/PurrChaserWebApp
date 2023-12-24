@@ -120,7 +120,7 @@ function MobileNavigation() {
                             </div>
                         </MobileNavLink>
 
-                        <MobileNavLink href="/login">
+                        <MobileNavLink href="/listing">
                             <div className="flex space-x-2 items-center">
                                 <span><TagIcon className="h-5 w-5 "/> </span>
                                 <span>Sell an item</span>
@@ -204,7 +204,7 @@ const AuthenticatedMobileNavigation: React.FC<AuthenticatedMobileHeaderProps> = 
                             </div>
                         </MobileNavLink>
 
-                        <MobileNavLink href="/#">
+                        <MobileNavLink href="/listing">
                             <div className="flex space-x-2 items-center">
                                 <span><TagIcon className="h-5 w-5 "/> </span>
                                 <span>Sell an item</span>
@@ -469,7 +469,7 @@ const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps> = ({handleLogOut, 
                                                     </div>
                                                 </MobileNavLink>
 
-                                                <MobileNavLink href="/#">
+                                                <MobileNavLink href="/listing">
                                                     <div className="flex space-x-2 items-center">
                                                         <span><TagIcon className="h-5 w-5 "/> </span>
                                                         <span>Sell an item</span>
@@ -549,7 +549,7 @@ const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps> = ({handleLogOut, 
                                 </Popover>
                             </div>
                         )}
-                        <Button href="/#" color="slate" className="hidden md:flex space-x-1">
+                        <Button href="/listing" color="slate" className="hidden md:flex space-x-1">
                             <span><PlusIcon className="h-6 w-6" aria-hidden="true"/></span>
                             <span>Sell <span className="hidden lg:inline">an</span> item</span>
                         </Button>
@@ -564,10 +564,15 @@ const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps> = ({handleLogOut, 
 }
 
 
-export function Header() {
+type HeaderProps = {
+    updateIsLoading: (isLoading: boolean) => void;
+}
+
+export const Header: React.FC<HeaderProps> = ({updateIsLoading}) => {
     const dispatch = useAppDispatch();
     const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
     const [isLoading, setIsLoading] = useState(true);
+    const [showTestimonialsAndFooter, setShowTestimonialsAndFooter] = useState(false);
 
     useEffect(() => {
         const currentUser = getCurrentUser();
@@ -579,7 +584,12 @@ export function Header() {
             }));
         }
         setIsLoading(false);
-    }, [dispatch]);
+
+        // Set a timeout to show Testimonials and Footer after a brief delay
+        setTimeout(() => {
+            updateIsLoading(false);
+        }, 100); // 100 milliseconds delay
+    }, [dispatch, updateIsLoading]);
 
     const handleLogOut = () => {
         dispatch(logoutUser());
