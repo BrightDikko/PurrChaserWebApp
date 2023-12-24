@@ -32,7 +32,7 @@ export const getCurrentUser = () => {
 }
 
 const baseQuery = fetchBaseQuery({
-    baseUrl: 'http://localhost:8000/auth/',
+    baseUrl: 'http://localhost:8000',
     prepareHeaders: (headers) => {
         const token = localStorage.getItem("token");
         // const token = null;
@@ -50,21 +50,34 @@ export const api = createApi({
     baseQuery: baseQueryWithRetry,
     tagTypes: [],
     endpoints: (builder) => ({
+        getAllCategories: builder.query({
+            query: () => ({
+                url: "/categories",
+                method: "GET"
+            }),
+            keepUnusedDataFor: 60 * 60 * 24  // 24 hours in seconds, specific to this endpoint
+        }),
+
         register: builder.mutation<UserResponse, RegisterRequest>({
             query: (credentials) => ({
-                url: "register",
+                url: "/auth/register",
                 method: "POST",
                 body: credentials,
             })
         }),
+
         login: builder.mutation<UserResponse, LoginRequest>({
-                query : (credentials) => ({
-                    url: "login",
-                    method: "POST",
-                    body: credentials
-                })
+            query: (credentials) => ({
+                url: "/auth/login",
+                method: "POST",
+                body: credentials
+            })
         })
     }),
 })
 
-export const { useRegisterMutation, useLoginMutation } = api;
+export const {
+    useGetAllCategoriesQuery,
+    useRegisterMutation,
+    useLoginMutation
+} = api;
