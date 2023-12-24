@@ -22,25 +22,25 @@ public class PurrChaserBackendServiceApplication {
     @Bean
     CommandLineRunner run(RoleRepository roleRepository, UserRepository userRepository) {
         return args -> {
-			createAdminUserIfNeeded("devbydikko@gmail.com", "password", roleRepository, userRepository);
+            createAdminUserIfNeeded("devbydikko@gmail.com", "password", roleRepository, userRepository);
         };
     }
 
     public void createAdminUserIfNeeded(String email, String password, RoleRepository roleRepository, UserRepository userRepository) {
-		if (userRepository.findByEmail(email).isEmpty()) {
-			Role adminRole = roleRepository.findByAuthority("ADMIN").orElseThrow(
-					() -> new RuntimeException("Admin role not found")
-			);
+        if (userRepository.findByEmail(email).isEmpty()) {
+            Role adminRole = roleRepository.findByAuthority("ADMIN").orElseThrow(
+                    () -> new RuntimeException("Admin role not found")
+            );
 
-			ApplicationUser adminUser = ApplicationUser.builder()
-					.email(email)
-					.firstName("Admin")
-					.password(new BCryptPasswordEncoder().encode(password))
-					.authorities(Collections.singleton(adminRole))
-					.build();
+            ApplicationUser adminUser = ApplicationUser.builder()
+                    .email(email)
+                    .firstName("Admin")
+                    .password(new BCryptPasswordEncoder().encode(password))
+                    .authorities(Collections.singleton(adminRole))
+                    .build();
 
-			userRepository.save(adminUser);
-		}
+            userRepository.save(adminUser);
+        }
     }
 
 }
