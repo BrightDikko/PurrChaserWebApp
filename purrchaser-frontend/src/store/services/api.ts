@@ -75,8 +75,8 @@ export const api = createApi({
         }),
 
         getAllListings: builder.query({
-            query: () => ({
-                url: "/listings/all",
+            query: ({ page = 0, size = 24 }) => ({
+                url: `/listings/all?page=${page}&size=${size}`,
                 method: "GET"
             })
         }),
