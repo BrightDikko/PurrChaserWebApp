@@ -4,6 +4,8 @@ import com.purrchaser.purrchaserbackend.domain.ApplicationUser;
 import com.purrchaser.purrchaserbackend.domain.Role;
 import com.purrchaser.purrchaserbackend.repository.RoleRepository;
 import com.purrchaser.purrchaserbackend.repository.UserRepository;
+import com.purrchaser.purrchaserbackend.s3.S3Buckets;
+import com.purrchaser.purrchaserbackend.s3.S3Service;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,7 +22,10 @@ public class PurrChaserBackendServiceApplication {
     }
 
     @Bean
-    CommandLineRunner run(RoleRepository roleRepository, UserRepository userRepository) {
+    CommandLineRunner run(RoleRepository roleRepository,
+                          UserRepository userRepository,
+                          S3Service s3Service,
+                          S3Buckets s3Buckets) {
         return args -> {
             createAdminUserIfNeeded("devbydikko@gmail.com", "password", roleRepository, userRepository);
         };

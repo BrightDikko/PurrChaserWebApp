@@ -24,6 +24,7 @@ type CategoryProps = {
 const ListingPage: React.FC<CategoryProps> = ({listingId}) => {
     const dispatch = useAppDispatch();
     const categoryPaths = useAppSelector((state) => state.categories.categoryPaths)
+    console.log("\ncategoryPaths:", categoryPaths);
 
     const { data: ALL_LISTINGS_DATA, isLoading, isError } = useGetAllListingsQuery();
 

@@ -67,7 +67,7 @@ export const authSlice = createSlice({
                 state.isAuthenticated = !!action.payload.user;
             })
             .addMatcher(api.endpoints?.login.matchRejected, (state, action) => {
-                // console.log('Login rejected. Action: ', action);
+                console.log('Login rejected. Action: ', action);
             })
     }
 })

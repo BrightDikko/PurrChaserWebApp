@@ -2,8 +2,8 @@ import React from "react";
 
 const LoadingSpinner = () => {
     return (
-        <div className="h-full flex justify-center items-center">
-            <div role="status" className="transform scale-[5]">
+        <div className="h-full flex justify-center items-center pb-20">
+            <div role="status" className="transform scale-[3]">
                 <svg aria-hidden="true"
                      className="mt-1 h-4 mr-2 text-gray-200 animate-spin fill-indigo-800"
                      viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">

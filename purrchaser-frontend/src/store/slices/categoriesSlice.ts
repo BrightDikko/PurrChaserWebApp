@@ -50,6 +50,8 @@ const categoriesSlice = createSlice({
         setCategories(state, action) {
             state.categories = action.payload;
 
+            console.log("action.payload for categories: ", action.payload);
+
             // Process categories to create slugs and paths
             const categoryPaths: CategoryPaths = {};
             action.payload.forEach((primary: PrimaryCategory) => {
