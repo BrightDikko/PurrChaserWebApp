@@ -18,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -76,6 +78,11 @@ public class ListingServiceImpl implements ListingService {
         }
 
         return newlyCreatedListing;
+    }
+
+    @Override
+    public List<Image> getImagesForListing(Integer listingId) {
+        return imageRepository.findByListing_ListingId(listingId);
     }
 
 }

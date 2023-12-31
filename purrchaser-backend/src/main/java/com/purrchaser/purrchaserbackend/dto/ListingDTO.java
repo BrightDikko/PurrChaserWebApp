@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -24,7 +25,8 @@ public class ListingDTO {
     private String itemCondition;
     private String brand;
     private String model;
-    private ImageDTO image;
+    private ImageDTO mainImage;
+    private List<ImageDTO> images;
     private TertiaryCategoryDTO category;
     private String meetingLocation;
 }

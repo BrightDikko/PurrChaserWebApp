@@ -23,7 +23,7 @@ export default function Home() {
         setIsLoading(loadingStatus);
         setTimeout(() => {
             setShowTestimonialsAndFooter(true);
-        }, 50); // 50 Milliseconds delay
+        }, 100); // 100 Milliseconds delay
     }
 
     return (

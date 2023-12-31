@@ -12,6 +12,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Component
 @RequiredArgsConstructor
 public class ListingMapper {
@@ -37,11 +40,23 @@ public class ListingMapper {
                 .isVerified(listing.getSeller().getIsVerified())
                 .build();
 
-        ImageDTO imageDTO = ImageDTO.builder()
+        // Map the main image of the listing
+        ImageDTO mainImageDTO = ImageDTO.builder()
                 .imageId(listing.getMainImage().getImageId())
                 .listingId(listing.getListingId())
                 .url(listing.getMainImage().getUrl())
                 .build();
+
+        // Fetch and map additional images, excluding the main image
+        Integer mainImageId = listing.getMainImage().getImageId();
+        List<ImageDTO> otherImagesDTOs = listingService.getImagesForListing(listing.getListingId()).stream()
+                .filter(image -> !image.getImageId().equals(mainImageId)) // Exclude the main image
+                .map(image -> ImageDTO.builder()
+                        .imageId(image.getImageId())
+                        .listingId(listing.getListingId())
+                        .url(image.getUrl())
+                        .build())
+                .collect(Collectors.toList());
 
         TertiaryCategoryDTO tertiaryCategoryDTO = TertiaryCategoryDTO.builder()
                 .tertiaryCategoryId(listing.getListingId())
@@ -60,7 +75,8 @@ public class ListingMapper {
                 .itemCondition(listing.getItemCondition())
                 .brand(listing.getBrand())
                 .model(listing.getModel())
-                .image(imageDTO)
+                .mainImage(mainImageDTO)
+                .images(otherImagesDTOs)
                 .category(tertiaryCategoryDTO)
                 .meetingLocation(listing.getMeetingLocation())
                 .build();
