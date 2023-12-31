@@ -32,7 +32,7 @@ export const getCurrentUser = () => {
 }
 
 const baseQuery = fetchBaseQuery({
-    baseUrl: 'http://localhost:8000',
+    baseUrl: 'http://10.31.118.77:8000',
     prepareHeaders: (headers) => {
         const token = localStorage.getItem("token");
         // const token = null;
@@ -79,6 +79,14 @@ export const api = createApi({
                 url: "/listings/all",
                 method: "GET"
             })
+        }),
+
+        createNewListing: builder.mutation({
+            query: (newListing) => ({
+                url: "/listings",
+                method: "POST",
+                body: newListing,
+            })
         })
     }),
 })
@@ -87,5 +95,6 @@ export const {
     useRegisterMutation,
     useLoginMutation,
     useGetAllCategoriesQuery,
-    useGetAllListingsQuery
+    useGetAllListingsQuery,
+    useCreateNewListingMutation
 } = api;

@@ -30,6 +30,7 @@ const lexend = Lexend({
 })
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
+    console.log("Inside main layout")
     return (
         <html
             lang="en"

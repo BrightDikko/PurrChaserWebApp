@@ -8,18 +8,23 @@ import {useGetAllListingsQuery} from "@/store/services/api";
 import {setAllListings} from "@/store/slices/listingsSlice";
 import {formatCategoryNameLikeInHrefSlug} from "@/store/slices/categoriesSlice";
 
-function classNames(...classes) {
+function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
 }
 
-const formatDate = (dateString) => {
+const formatDate = (dateString: any) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
     return new Date(dateString).toLocaleString(undefined, options);
 };
 
+type CategoryProps = {
+    listingId: string;
+}
+
 const ListingPage: React.FC<CategoryProps> = ({listingId}) => {
     const dispatch = useAppDispatch();
     const categoryPaths = useAppSelector((state) => state.categories.categoryPaths)
+    console.log("\ncategoryPaths:", categoryPaths);
 
     const { data: ALL_LISTINGS_DATA, isLoading, isError } = useGetAllListingsQuery();
 
@@ -28,7 +33,7 @@ const ListingPage: React.FC<CategoryProps> = ({listingId}) => {
             dispatch(setAllListings(ALL_LISTINGS_DATA));
         }
         console.log("listingId: ", typeof listingId);
-    }, [ALL_LISTINGS_DATA, dispatch]);
+    }, [ALL_LISTINGS_DATA, dispatch, listingId]);
 
     if (isLoading) {
         return <div>Loading...</div>; // Or a loading spinner

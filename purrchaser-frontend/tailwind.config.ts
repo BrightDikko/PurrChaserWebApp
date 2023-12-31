@@ -3,6 +3,8 @@ import headlessuiPlugin from '@headlessui/tailwindcss';
 import typographyPlugin from '@tailwindcss/typography';
 import aspectRatioPlugin from '@tailwindcss/aspect-ratio';
 import type {Config} from 'tailwindcss';
+import defaultTheme from 'tailwindcss/defaultTheme';
+
 
 const config: Config = {
     content: [
@@ -25,6 +27,10 @@ const config: Config = {
             '7xl': ['4.5rem', {lineHeight: '1.1'}],
             '8xl': ['6rem', {lineHeight: '1'}],
             '9xl': ['8rem', {lineHeight: '1'}],
+        },
+        screens: {
+            'xs': '530px',
+            ...defaultTheme.screens,
         },
         extend: {
             borderRadius: {

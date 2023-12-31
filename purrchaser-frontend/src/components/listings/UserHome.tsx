@@ -7,7 +7,6 @@ import SingleAvailableForSaleSection from "@/components/listings/SingleAvailable
 import HomeNavTabs from "@/components/nav/HomeNavTabs";
 import {useRouter} from "next/navigation";
 import {useGetAllListingsQuery} from "@/store/services/api";
-import {ALL} from "dns";
 import {NavLink} from "@/components/shared/NavLink";
 import {useAppDispatch} from "@/hooks/store";
 import {setAllListings} from "@/store/slices/listingsSlice";
@@ -64,7 +63,7 @@ export default function UserHome() {
                 </div>
                 :
                 <div
-                    className="-ml-1 sm:-ml-2 mb-10 mt-6 mx-auto pt-2 grid grid-cols-2 gap-x-3.5 sm:gap-x-5 gap-y-7 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 ">
+                    className="-ml-1 sm:-ml-2 mb-10 mt-6 mx-auto pt-2 grid gap-x-3.5  sm:gap-x-5 gap-y-7 grid-cols-2 xs:grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 ">
                     {ALL_LISTINGS_DATA.content.map((listing, listingIndex: number) => (
                         <NavLink
                             key={listingIndex}
