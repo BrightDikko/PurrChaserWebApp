@@ -81,6 +81,13 @@ export const api = createApi({
             })
         }),
 
+        getListingById: builder.query({
+            query: (id) => ({
+                url: `/listings/${id}`,
+                method: "GET"
+            })
+        }),
+
         createNewListing: builder.mutation({
             query: (newListing) => ({
                 url: "/listings",
@@ -96,5 +103,6 @@ export const {
     useLoginMutation,
     useGetAllCategoriesQuery,
     useGetAllListingsQuery,
+    useGetListingByIdQuery,
     useCreateNewListingMutation
 } = api;

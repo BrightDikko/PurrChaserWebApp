@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -47,6 +48,18 @@ public class ListingController {
                                                            Pageable pageable) {
         return ResponseEntity.ok(listingMapper.getAllListings(pageable));
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ListingDTO> getListingById(@PathVariable Integer id) {
+        System.out.println("Received request to getListingById. id: " + id);
+        ListingDTO listingDTO = listingMapper.getListingById(id);
+        if (listingDTO == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        System.out.println("listingDTO to be returned: " + listingDTO);
+        return ResponseEntity.ok(listingDTO);
+    }
+
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ListingDTO> createListing(
