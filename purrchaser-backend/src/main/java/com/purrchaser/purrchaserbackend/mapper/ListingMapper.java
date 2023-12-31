@@ -26,6 +26,11 @@ public class ListingMapper {
         return listings.map(this::convertToListingDTO);
     }
 
+    public ListingDTO getListingById(Integer listingId) {
+        Listing listing = listingService.getListingById(listingId);
+        return convertToListingDTO(listing);
+    }
+
     public ListingDTO createListing(CreateListingRequest createListingRequest) {
         Listing newlyCreatedListing = listingService.createNewListing(createListingRequest);
         return convertToListingDTO(newlyCreatedListing);

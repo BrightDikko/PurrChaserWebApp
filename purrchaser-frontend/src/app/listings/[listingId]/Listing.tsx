@@ -1,11 +1,10 @@
 "use client"
 
-import React, {useEffect} from "react";
-import {useAppDispatch, useAppSelector} from "@/hooks/store";
+import React, {useEffect, useState} from "react";
+import {useAppSelector} from "@/hooks/store";
 import {Disclosure, Tab} from '@headlessui/react'
 import {HeartIcon, MinusIcon, PlusIcon} from '@heroicons/react/24/outline'
-import {useGetAllListingsQuery} from "@/store/services/api";
-import {setAllListings} from "@/store/slices/listingsSlice";
+import {useGetListingByIdQuery} from "@/store/services/api";
 import {formatCategoryNameLikeInHrefSlug} from "@/store/slices/categoriesSlice";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
 
@@ -13,8 +12,15 @@ function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
 }
 
-const formatDate = (dateString: any) => {
-    const options = {year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'};
+// Helper function to format date strings
+const formatDate = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    };
     return new Date(dateString).toLocaleString(undefined, options);
 };
 
@@ -22,35 +28,60 @@ type CategoryProps = {
     listingId: string;
 }
 
-const ListingPage: React.FC<CategoryProps> = ({listingId}) => {
-    const dispatch = useAppDispatch();
-    const categoryPaths = useAppSelector((state) => state.categories.categoryPaths)
-    console.log("\ncategoryPaths:", categoryPaths);
+interface ImageType {
+    imageId: number;
+    listingId: number;
+    url: string;
+}
 
-    const {data: ALL_LISTINGS_DATA, isLoading, isError} = useGetAllListingsQuery();
+const ListingPage: React.FC<CategoryProps> = ({listingId}) => {
+    const categoryPaths = useAppSelector((state) => state.categories.categoryPaths)
+    // console.log("\n categoryPaths:", categoryPaths);
+
+    const {data: currentListing, isLoading, isError} = useGetListingByIdQuery(parseInt(listingId));
+
+    // State to track if all images are loaded
+    const [imagesLoaded, setImagesLoaded] = useState(false);
 
     useEffect(() => {
-        if (ALL_LISTINGS_DATA) {
-            dispatch(setAllListings(ALL_LISTINGS_DATA));
-        }
-    }, [ALL_LISTINGS_DATA, dispatch, listingId]);
+        if (currentListing) {
+            console.log("\n currentListing: ", currentListing);
 
-    if (isLoading) {
+            // Preload all images (main and others) when the current listing is fetched
+            let imagesToLoad = [currentListing.mainImage.url, ...currentListing.images.map((img: ImageType) => img.url)];
+            let loadedImages = 0;
+
+            imagesToLoad.forEach(imageSrc => {
+                const img = new Image();
+                img.src = imageSrc;
+                img.onload = () => {
+                    loadedImages++;
+                    if (loadedImages === imagesToLoad.length) {
+                        setImagesLoaded(true); // Set true when all images are loaded
+                    }
+                };
+            });
+        }
+    }, [currentListing]);
+
+    // Show loading spinner until listing data and images are loaded
+    if (isLoading || !imagesLoaded) {
         return <LoadingSpinner/>;
     }
 
+    // Handle error state
     if (isError) {
         console.error("Error occurred while loading the listing. Error: ", isError);
-        return;
+        return; // Return error message or component
     }
 
-    const currentListing = ALL_LISTINGS_DATA?.content.find((listing) => listing?.listingId === parseInt(listingId));
-
+    // Preparing data for rendering
     const mainImage = currentListing.mainImage;
     const otherImages = currentListing.images;
     const listingImages = [mainImage, ...otherImages];
+    const listingCategoryPath = categoryPaths[decodeURIComponent(formatCategoryNameLikeInHrefSlug(currentListing.category.name))];
 
-    const listingCategoryPath = categoryPaths[decodeURIComponent(formatCategoryNameLikeInHrefSlug(currentListing.category.name))]
+    // Listing details for rendering in the UI
     const listingDetails = [
         {
             name: 'Details',
@@ -82,16 +113,15 @@ const ListingPage: React.FC<CategoryProps> = ({listingId}) => {
                     {/* Image gallery */}
                     <Tab.Group as="div" className="flex flex-col-reverse">
                         {/* Image selector */}
-                        <div className="mx-auto mt-6 hidden w-full max-w-2xl sm:block lg:max-w-none">
-                            <Tab.List className="grid grid-cols-4 gap-6">
+                        <div className="mx-auto mt-6 w-full max-w-2xl block lg:max-w-none">
+                            <Tab.List className="grid grid-cols-4 gap-4 sm:gap-6">
                                 {listingImages.map((image) => (
                                     <Tab
                                         key={image.imageId}
-                                        className="relative flex h-24 cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-offset-4"
+                                        className="relative flex h-20 sm:h-24 cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-offset-4"
                                     >
                                         {({selected}) => (
                                             <>
-                                                {/*<span className="sr-only">{image.name}</span>*/}
                                                 <span className="absolute inset-0 overflow-hidden rounded-md">
                                                     <img src={image.url} alt=""
                                                          className="h-full w-full object-cover object-center"/>

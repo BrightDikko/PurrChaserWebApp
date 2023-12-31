@@ -14,4 +14,6 @@ public interface ListingService {
     Listing createNewListing(CreateListingRequest createListingRequest);
 
     List<Image> getImagesForListing(Integer listingId);
+
+    Listing getListingById(Integer listingId);
 }

@@ -75,8 +75,15 @@ export const api = createApi({
         }),
 
         getAllListings: builder.query({
-            query: () => ({
-                url: "/listings/all",
+            query: ({ page = 0, size = 24 }) => ({
+                url: `/listings/all?page=${page}&size=${size}`,
+                method: "GET"
+            })
+        }),
+
+        getListingById: builder.query({
+            query: (id) => ({
+                url: `/listings/${id}`,
                 method: "GET"
             })
         }),
@@ -96,5 +103,6 @@ export const {
     useLoginMutation,
     useGetAllCategoriesQuery,
     useGetAllListingsQuery,
+    useGetListingByIdQuery,
     useCreateNewListingMutation
 } = api;

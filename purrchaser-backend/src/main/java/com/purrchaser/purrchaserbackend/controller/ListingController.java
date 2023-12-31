@@ -15,15 +15,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import software.amazon.awssdk.services.s3.S3Client;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -47,6 +48,18 @@ public class ListingController {
                                                            Pageable pageable) {
         return ResponseEntity.ok(listingMapper.getAllListings(pageable));
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ListingDTO> getListingById(@PathVariable Integer id) {
+        System.out.println("Received request to getListingById. id: " + id);
+        ListingDTO listingDTO = listingMapper.getListingById(id);
+        if (listingDTO == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        System.out.println("listingDTO to be returned: " + listingDTO);
+        return ResponseEntity.ok(listingDTO);
+    }
+
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ListingDTO> createListing(
@@ -73,8 +86,6 @@ public class ListingController {
                 .itemCondition(itemCondition)
                 .brand(brand)
                 .model(model)
-                // For images, you might want to store them in an S3 bucket or similar
-                // and then save the URL in the createListingRequest
                 .mainImageUrl(storeImage(sellerId, mainImage))
                 .otherImagesUrls(storeImages(sellerId, otherImages))
                 .categoryId(categoryId)
@@ -105,6 +116,10 @@ public class ListingController {
 
 
     private List<String> storeImages(Integer sellerId, List<MultipartFile> images) {
+        if (images == null) {
+            return Collections.emptyList(); // Return an empty list if images is null
+        }
+
         return images.stream().map(image -> {
             String listingImageId = UUID.randomUUID().toString();
             String objectKey = "listing-images/%s/%s".formatted(sellerId, listingImageId);
@@ -118,4 +133,5 @@ public class ListingController {
             }
         }).collect(Collectors.toList());
     }
+
 }
