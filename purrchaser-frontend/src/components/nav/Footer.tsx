@@ -21,7 +21,7 @@ export function Footer() {
             <Link
               href="/#"
               className="group"
-              aria-label="TaxPal on Twitter"
+              aria-label="XO CLUTCH on Instagram"
             >
               <svg
                   xmlns="http://www.w3.org/2000/svg"
