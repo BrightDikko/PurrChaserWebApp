@@ -7,13 +7,14 @@ import {HeartIcon, MinusIcon, PlusIcon} from '@heroicons/react/24/outline'
 import {useGetAllListingsQuery} from "@/store/services/api";
 import {setAllListings} from "@/store/slices/listingsSlice";
 import {formatCategoryNameLikeInHrefSlug} from "@/store/slices/categoriesSlice";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
 
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
 }
 
 const formatDate = (dateString: any) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+    const options = {year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'};
     return new Date(dateString).toLocaleString(undefined, options);
 };
 
@@ -26,26 +27,28 @@ const ListingPage: React.FC<CategoryProps> = ({listingId}) => {
     const categoryPaths = useAppSelector((state) => state.categories.categoryPaths)
     console.log("\ncategoryPaths:", categoryPaths);
 
-    const { data: ALL_LISTINGS_DATA, isLoading, isError } = useGetAllListingsQuery();
+    const {data: ALL_LISTINGS_DATA, isLoading, isError} = useGetAllListingsQuery();
 
     useEffect(() => {
         if (ALL_LISTINGS_DATA) {
             dispatch(setAllListings(ALL_LISTINGS_DATA));
         }
-        console.log("listingId: ", typeof listingId);
     }, [ALL_LISTINGS_DATA, dispatch, listingId]);
 
     if (isLoading) {
-        return <div>Loading...</div>; // Or a loading spinner
+        return <LoadingSpinner/>;
     }
 
     if (isError) {
-        return <div>Error loading the listing</div>;
+        console.error("Error occurred while loading the listing. Error: ", isError);
+        return;
     }
 
     const currentListing = ALL_LISTINGS_DATA?.content.find((listing) => listing?.listingId === parseInt(listingId));
 
-    const productImages = [currentListing.image]
+    const mainImage = currentListing.mainImage;
+    const otherImages = currentListing.images;
+    const listingImages = [mainImage, ...otherImages];
 
     const listingCategoryPath = categoryPaths[decodeURIComponent(formatCategoryNameLikeInHrefSlug(currentListing.category.name))]
     const listingDetails = [
@@ -81,7 +84,7 @@ const ListingPage: React.FC<CategoryProps> = ({listingId}) => {
                         {/* Image selector */}
                         <div className="mx-auto mt-6 hidden w-full max-w-2xl sm:block lg:max-w-none">
                             <Tab.List className="grid grid-cols-4 gap-6">
-                                {productImages.map((image) => (
+                                {listingImages.map((image) => (
                                     <Tab
                                         key={image.imageId}
                                         className="relative flex h-24 cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-offset-4"
@@ -90,7 +93,8 @@ const ListingPage: React.FC<CategoryProps> = ({listingId}) => {
                                             <>
                                                 {/*<span className="sr-only">{image.name}</span>*/}
                                                 <span className="absolute inset-0 overflow-hidden rounded-md">
-                                                    <img src={image.url} alt="" className="h-full w-full object-cover object-center"/>
+                                                    <img src={image.url} alt=""
+                                                         className="h-full w-full object-cover object-center"/>
                                                 </span>
                                                 <span
                                                     className={classNames(
@@ -107,7 +111,7 @@ const ListingPage: React.FC<CategoryProps> = ({listingId}) => {
                         </div>
 
                         <Tab.Panels className=" aspect-w-1 w-full">
-                            {productImages.map((image) => (
+                            {listingImages.map((image) => (
                                 <Tab.Panel key={image.imageId} className="relative">
                                     {/* Wrapper for blurred background */}
                                     <div className="absolute inset-0 overflow-hidden z-0 rounded-xl">
@@ -221,20 +225,20 @@ const ListingPage: React.FC<CategoryProps> = ({listingId}) => {
                                                 </h3>
 
                                                 <Disclosure.Panel as="div" className="prose prose-sm pb-6">
-                                                        <table className="min-w-full divide-y divide-gray-200">
-                                                            <tbody className="bg-white divide-y divide-gray-200">
-                                                            {Object.entries(detail.content).map(([key, value]) => {
-                                                                // Check if the value is a date-time string and format it
-                                                                const displayValue = (key === 'Date Posted' || key === 'Last Updated') ? formatDate(value) : value;
-                                                                return (
-                                                                    <tr key={key}>
-                                                                        <td className="py-4 whitespace-normal text-sm font-medium text-gray-500">{key}</td>
-                                                                        <td className="px-10 py-4 whitespace-normal text-sm text-gray-800">{displayValue}</td>
-                                                                    </tr>
-                                                                );
-                                                            })}
-                                                            </tbody>
-                                                        </table>
+                                                    <table className="min-w-full divide-y divide-gray-200">
+                                                        <tbody className="bg-white divide-y divide-gray-200">
+                                                        {Object.entries(detail.content).map(([key, value]) => {
+                                                            // Check if the value is a date-time string and format it
+                                                            const displayValue = (key === 'Date Posted' || key === 'Last Updated') ? formatDate(value) : value;
+                                                            return (
+                                                                <tr key={key}>
+                                                                    <td className="py-4 whitespace-normal text-sm font-medium text-gray-500">{key}</td>
+                                                                    <td className="px-10 py-4 whitespace-normal text-sm text-gray-800">{displayValue}</td>
+                                                                </tr>
+                                                            );
+                                                        })}
+                                                        </tbody>
+                                                    </table>
                                                 </Disclosure.Panel>
 
                                             </>

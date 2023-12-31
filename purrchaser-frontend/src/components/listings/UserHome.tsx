@@ -11,8 +11,6 @@ import {NavLink} from "@/components/shared/NavLink";
 import {useAppDispatch} from "@/hooks/store";
 import {setAllListings} from "@/store/slices/listingsSlice";
 
-const products = [...FOOTBALL_TICKETS_DATA, ...WINTER_GEAR_DATA, ...TEXT_BOOKS_DATA]
-
 export default function UserHome() {
     const router = useRouter();
 
@@ -73,7 +71,7 @@ export default function UserHome() {
                                 <div className="h-40 w-full overflow-hidden rounded-md bg-gray-200 aspect-square group-hover:opacity-90">
                                     {/* eslint-disable-next-line @next/next/no-img-element */}
                                     <img
-                                        src={listing.image.url}
+                                        src={listing.mainImage.url}
                                         alt={`Image of ${listing.title}`}
                                         className="object-cover object-center w-full h-full rounded-md"
                                         style={{ objectFit: 'cover', height: '100%' }}
