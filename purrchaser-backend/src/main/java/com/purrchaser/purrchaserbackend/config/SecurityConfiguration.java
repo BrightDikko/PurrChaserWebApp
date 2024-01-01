@@ -78,6 +78,7 @@ public class SecurityConfiguration {
                     auth.requestMatchers(new AntPathRequestMatcher("/auth/**")).permitAll(); //Allow any user to access "/auth/**" endpoint
                     auth.requestMatchers(new AntPathRequestMatcher("/categories/**")).permitAll(); //Allow any user to access "/categories/**" endpoint
                     auth.requestMatchers(new AntPathRequestMatcher("/listings/**")).permitAll(); //Allow any user to access "/listings/**" endpoint
+                    auth.requestMatchers(new AntPathRequestMatcher("/schools/**")).permitAll(); //Allow any user to access "/schools/**" endpoint
                     auth.requestMatchers(new AntPathRequestMatcher("/admin/**")).hasRole("ADMIN"); //The hasRole part here is going to look for (uppercase) "ADMIN", however the AuthenticationManager is going to look for "ROLE_ADMIN"
                     auth.requestMatchers(new AntPathRequestMatcher("/user/**")).hasAnyRole("ADMIN", "USER");
                     auth.anyRequest().authenticated();

@@ -1,8 +1,9 @@
 import {createApi, fetchBaseQuery, retry} from "@reduxjs/toolkit/query/react";
 
 export interface User {
-    fullName: string | null;
-    schoolName: string | null;
+    firstName: string | null;
+    lastName: string | null;
+    schoolId: number;
     email: string;
     password: string;
 }
@@ -13,8 +14,9 @@ export interface UserResponse {
 }
 
 export interface RegisterRequest {
-    fullName: string | null;
-    schoolName: string | null;
+    firstName: string;
+    lastName: string;
+    schoolId: number;
     email: string;
     password: string;
 }
@@ -23,6 +25,14 @@ export interface LoginRequest {
     email: string;
     password: string;
 }
+
+export interface School {
+    "schoolId": number;
+    "name": string;
+    "emailFormat": string;
+}
+
+export type AllSchools = School[];
 
 export const getCurrentUser = () => {
     if (typeof window !== 'undefined') {
@@ -66,6 +76,14 @@ export const api = createApi({
             })
         }),
 
+        getAllSchools: builder.query<AllSchools, void>({
+           query: () => ({
+               url: "/schools",
+               method: "GET"
+           }),
+            keepUnusedDataFor: 60 * 60 * 24  // 24 hours in seconds, specific to this endpoint
+        }),
+
         getAllCategories: builder.query({
             query: () => ({
                 url: "/categories",
@@ -101,6 +119,7 @@ export const api = createApi({
 export const {
     useRegisterMutation,
     useLoginMutation,
+    useGetAllSchoolsQuery,
     useGetAllCategoriesQuery,
     useGetAllListingsQuery,
     useGetListingByIdQuery,
