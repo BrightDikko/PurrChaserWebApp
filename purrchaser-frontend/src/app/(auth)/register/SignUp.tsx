@@ -3,76 +3,104 @@
 import React, {useEffect, useState} from "react";
 import Image from "next/image";
 import clsx from "clsx";
-import {UserInfo} from "@/types/UserInfo";
-import {useAppSelector} from "@/hooks/store";
+import {useAppDispatch} from "@/hooks/store";
 import {useRouter} from "next/navigation";
-import {useRegisterMutation} from "@/store/services/api";
-import {RegisterRequest} from "@/store/services/api";
+import {
+    AllSchools,
+    getCurrentUser,
+    RegisterRequest,
+    School,
+    useGetAllSchoolsQuery,
+    useRegisterMutation
+} from "@/store/services/api";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
+import {logoutUser} from "@/store/slices/authSlice";
 
-interface ValidSchools {
-    school_1: string;
-    school_2: string;
-    school_3: string;
-}
+// Function to validate email
+const validateEmail = (enteredEmail: string, allSchools: AllSchools, selectedSchoolId: number) => {
+    const school: School | undefined = allSchools.find(school => school.schoolId === selectedSchoolId);
 
-type SchoolKeys = keyof ValidSchools;
+    if (!school) return false;
 
-const VALID_SCHOOLS = {
-    "school_1": "Holy Cross College",
-    "school_2": "Saint Mary's College",
-    "school_3": "University of Notre Dame",
+    const emailPattern = new RegExp(`^[a-zA-Z0-9._-]+${escapeRegExp(school.emailFormat)}$`);
+
+    return emailPattern.test(enteredEmail);
+};
+
+// Helper function to escape special characters in the email format for regex
+function escapeRegExp(emailFormat: string) {
+    return emailFormat.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 const SignUp = () => {
     const router = useRouter();
-    const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
+    const dispatch = useAppDispatch();
 
-    const [register, { isLoading }] = useRegisterMutation();
+    const {data: allSchools, isLoading: isLoadingSchools, error: errorWhileFetchingSchools} = useGetAllSchoolsQuery();
 
-    const [enteredFullName, setEnteredFullName] = useState("");
-    const [selectedSchoolKey, setSelectedSchoolKey] = useState<SchoolKeys | "DEFAULT">("DEFAULT");
+    const [register, {isLoading}] = useRegisterMutation();
+
+    const [enteredFirstName, setEnteredFirstName] = useState("");
+    const [enteredLastName, setEnteredLastName] = useState("");
+    const [selectedSchoolId, setSelectedSchoolId] = useState<number | "DEFAULT">("DEFAULT");
     const [enteredEmail, setEnteredEmail] = useState("");
     const [enteredPassword, setEnteredPassword] = useState("");
     const [enableCreateAccountButton, setEnableCreateAccountButton] = useState(false);
 
     useEffect(() => {
-        setEnteredFullName("");
-        setSelectedSchoolKey("DEFAULT");
+        setEnteredFirstName("");
+        setEnteredLastName("");
+        setSelectedSchoolId("DEFAULT");
         setEnteredEmail("");
         setEnteredPassword("");
         setEnableCreateAccountButton(false);
     }, []);
 
     useEffect(() => {
-        if (isAuthenticated) {
-            // console.log("User is already registered. REDIRECTING TO HOME PAGE!");
-            // router.push('/'); // TODO: HANDLE CORRECTLY, MAYBE RE DIRECT TO LOGIN PAGE
+        const currentUser = getCurrentUser();
+        if (currentUser) {
+            dispatch(logoutUser());
         }
-    }, [router, isAuthenticated]);
+    }, [router, dispatch]);
 
     useEffect(() => {
-        const enteredFullNameIsValid = enteredFullName.trim().length > 2;
-        const selectedSchoolIsValid = selectedSchoolKey !== "DEFAULT";
-        const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+$/;
-        const enteredEmailIsValid = emailPattern.test(enteredEmail);
+        const enteredFirstNameIsValid = enteredFirstName.trim().length > 1;
+        const enteredLastNameIsValid = enteredLastName.trim().length > 1;
+        const selectedSchoolIsValid = selectedSchoolId !== "DEFAULT";
+
+        let enteredEmailIsValid = false;
+        if (allSchools && selectedSchoolId !== "DEFAULT") {
+            enteredEmailIsValid = validateEmail(enteredEmail, allSchools, selectedSchoolId);
+        }
+
         const enteredPasswordIsValid = enteredPassword.trim().length > 5;
 
-        if (enteredPasswordIsValid && enteredEmailIsValid && selectedSchoolIsValid && enteredFullNameIsValid) {
+        if (enteredPasswordIsValid && enteredEmailIsValid && selectedSchoolIsValid && enteredFirstNameIsValid && enteredLastNameIsValid) {
             setEnableCreateAccountButton(true);
         } else {
             setEnableCreateAccountButton(false);
         }
-    }, [enteredFullName, selectedSchoolKey, enteredEmail, enteredPassword]);
+    }, [enteredFirstName, enteredLastName, selectedSchoolId, enteredEmail, enteredPassword, allSchools]);
 
-    const handleFullNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setEnteredFullName(event.target.value);
+    if (isLoadingSchools) {
+        return (<LoadingSpinner/>);
     }
 
-    const handleSchoolNameChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const schoolKey = event.target.value as SchoolKeys;
-        if (schoolKey in VALID_SCHOOLS) {
-            setSelectedSchoolKey(schoolKey);
-        }
+    if (errorWhileFetchingSchools) {
+        console.error("An error occurred while fetching schools. Error: ", errorWhileFetchingSchools);
+    }
+
+    const handleFirstNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setEnteredFirstName(event.target.value);
+    }
+
+    const handleLastNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setEnteredLastName(event.target.value);
+    }
+
+    const handleSchoolChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const schoolId = event.target.value;
+        setSelectedSchoolId(parseInt(schoolId));
     }
 
     const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,21 +114,21 @@ const SignUp = () => {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        if (selectedSchoolKey === "DEFAULT") {
+        if (selectedSchoolId === "DEFAULT") {
             return;
         }
 
         const userCredentials: RegisterRequest = {
-            fullName: enteredFullName,
-            schoolName: VALID_SCHOOLS[selectedSchoolKey],
+            firstName: enteredFirstName,
+            lastName: enteredLastName,
+            schoolId: selectedSchoolId,
             email: enteredEmail,
             password: enteredPassword
         };
 
         try {
-            const user = await register(userCredentials).unwrap();
-            // console.log("User registered successfully!\nUser Info:", user);
-            router.push('/login');
+            await register(userCredentials).unwrap();
+            router.push('/login'); // REDIRECT TO LOGIN PAGE FOLLOWING SUCCESSFUL REGISTRATION
         } catch (userRegistrationError) {
             console.error("An error occurred while attempting to register user. userRegistrationError: ", userRegistrationError);
         }
@@ -132,7 +160,7 @@ const SignUp = () => {
 
                 <div className=" sm:mx-auto sm:w-full sm:max-w-md">
                     <h2 className="text-center md:text-left text-2xl font-bold leading-9 tracking-tight text-gray-800">
-                       <span className="relative whitespace-nowrap text-indigo-700 outline-1 outline-amber-50 mr-2">
+                       <span className="relative whitespace-nowrap text-indigo-700 outline-1 outline-amber-50 mr-1">
                             <svg
                                 aria-hidden="true"
                                 viewBox="0 0 418 42"
@@ -142,29 +170,50 @@ const SignUp = () => {
                                 <path
                                     d="M203.371.916c-26.013-2.078-76.686 1.963-124.73 9.946L67.3 12.749C35.421 18.062 18.2 21.766 6.004 25.934 1.244 27.561.828 27.778.874 28.61c.07 1.214.828 1.121 9.595-1.176 9.072-2.377 17.15-3.92 39.246-7.496C123.565 7.986 157.869 4.492 195.942 5.046c7.461.108 19.25 1.696 19.17 2.582-.107 1.183-7.874 4.31-25.75 10.366-21.992 7.45-35.43 12.534-36.701 13.884-2.173 2.308-.202 4.407 4.442 4.734 2.654.187 3.263.157 15.593-.78 35.401-2.686 57.944-3.488 88.365-3.143 46.327.526 75.721 2.23 130.788 7.584 19.787 1.924 20.814 1.98 24.557 1.332l.066-.011c1.201-.203 1.53-1.825.399-2.335-2.911-1.31-4.893-1.604-22.048-3.261-57.509-5.556-87.871-7.36-132.059-7.842-23.239-.254-33.617-.116-50.627.674-11.629.54-42.371 2.494-46.696 2.967-2.359.259 8.133-3.625 26.504-9.81 23.239-7.825 27.934-10.149 28.304-14.005.417-4.348-3.529-6-16.878-7.066Z"/>
                             </svg>
-                            <span className="relative">Clutch!</span>
+                            <span className="relative">XO Clutch!</span>
                         </span> Create your account
                     </h2>
                 </div>
 
                 <div className="mt-2 sm:mt-8 sm:mx-auto w-full sm:max-w-[580px]">
-                    <div className="bg-white px-6 py-8 rounded-lg sm:px-12">
-                        <form className="space-y-7" onSubmit={handleSubmit} method="POST" autoComplete="off">
+                    <div className="bg-white px-6 py-2 rounded-lg sm:px-12">
+                        <form className="space-y-4" onSubmit={handleSubmit} method="POST" autoComplete="off">
+
                             <div>
-                                <label htmlFor="user_fullname"
+                                <label htmlFor="first_name"
                                        className="block text-sm font-medium leading-6 text-left text-black">
-                                    Full name
+                                    First name
                                 </label>
                                 <div className="mt-2">
                                     <input
-                                        id="user_fullname"
-                                        name="user_fullname"
+                                        id="first_name"
+                                        name="first_name"
                                         type="text"
                                         autoComplete="name"
                                         required
-                                        placeholder="Enter your full name"
-                                        value={enteredFullName}
-                                        onChange={handleFullNameChange}
+                                        placeholder="Enter your first name"
+                                        value={enteredFirstName}
+                                        onChange={handleFirstNameChange}
+                                        className="block w-full rounded-md border-0 py-2 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label htmlFor="last_name"
+                                       className="block text-sm font-medium leading-6 text-left text-black">
+                                    Last name
+                                </label>
+                                <div className="mt-2">
+                                    <input
+                                        id="last_name"
+                                        name="last_name"
+                                        type="text"
+                                        autoComplete="name"
+                                        required
+                                        placeholder="Enter your last name"
+                                        value={enteredLastName}
+                                        onChange={handleLastNameChange}
                                         className="block w-full rounded-md border-0 py-2 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                     />
                                 </div>
@@ -173,20 +222,20 @@ const SignUp = () => {
                             <div>
                                 <label htmlFor="user_school"
                                        className="block text-sm font-medium leading-6 text-left text-black">
-                                    Choose your TRiBE
+                                    Select your School
                                 </label>
                                 <div className="mt-2">
                                     <select
                                         id="user_school"
                                         name="user_school"
                                         required
-                                        value={selectedSchoolKey}
-                                        onChange={handleSchoolNameChange}
+                                        value={selectedSchoolId}
+                                        onChange={handleSchoolChange}
                                         className="block w-full rounded-md border-0 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                     >
-                                        <option value="DEFAULT" disabled>Select your school or university</option>
-                                        {Object.entries(VALID_SCHOOLS).map(([key, value]) => (
-                                            <option key={key} value={key}>{value}</option>
+                                        <option value="DEFAULT" disabled>Choose your College / University</option>
+                                        {allSchools?.map((school: School) => (
+                                            <option key={school.schoolId} value={school.schoolId}>{school.name}</option>
                                         ))}
                                     </select>
                                 </div>
@@ -276,8 +325,9 @@ const SignUp = () => {
                                     href="#"
                                     className="flex w-full items-center justify-center gap-1.5 rounded-md bg-white border px-3 py-2 text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#24292F]"
                                 >
-                                    <svg   className="h-5 w-5" aria-hidden="true" fill="currentColor" viewBox="0 0 32 32">
-                                        <path d="M 16.003906 14.0625 L 16.003906 18.265625 L 21.992188 18.265625 C 21.210938 20.8125 19.082031 22.636719 16.003906 22.636719 C 12.339844 22.636719 9.367188 19.664063 9.367188 16 C 9.367188 12.335938 12.335938 9.363281 16.003906 9.363281 C 17.652344 9.363281 19.15625 9.96875 20.316406 10.964844 L 23.410156 7.867188 C 21.457031 6.085938 18.855469 5 16.003906 5 C 9.925781 5 5 9.925781 5 16 C 5 22.074219 9.925781 27 16.003906 27 C 25.238281 27 27.277344 18.363281 26.371094 14.078125 Z"></path>
+                                    <svg className="h-5 w-5" aria-hidden="true" fill="currentColor" viewBox="0 0 32 32">
+                                        <path
+                                            d="M 16.003906 14.0625 L 16.003906 18.265625 L 21.992188 18.265625 C 21.210938 20.8125 19.082031 22.636719 16.003906 22.636719 C 12.339844 22.636719 9.367188 19.664063 9.367188 16 C 9.367188 12.335938 12.335938 9.363281 16.003906 9.363281 C 17.652344 9.363281 19.15625 9.96875 20.316406 10.964844 L 23.410156 7.867188 C 21.457031 6.085938 18.855469 5 16.003906 5 C 9.925781 5 5 9.925781 5 16 C 5 22.074219 9.925781 27 16.003906 27 C 25.238281 27 27.277344 18.363281 26.371094 14.078125 Z"></path>
                                     </svg>
                                     <span className="text-sm font-semibold leading-6">Google Account</span>
                                 </a>
