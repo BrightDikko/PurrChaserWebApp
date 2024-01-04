@@ -2,8 +2,9 @@ import {createSlice} from "@reduxjs/toolkit";
 import {api} from "@/store/services/api";
 
 export interface User {
-    fullName: string | null;
-    schoolName: string | null;
+    firstName: string | null;
+    lastName: string | null;
+    schoolId: number;
     email: string;
     password: string;
 }

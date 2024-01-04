@@ -140,13 +140,13 @@ export default function UserHome() {
                 :
                 <>
                     <div
-                        className="-ml-1 sm:-ml-2 mb-10 mt-6 mx-auto pt-2 grid gap-x-3.5  sm:gap-x-5 gap-y-7 grid-cols-2 xs:grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 ">
+                        className="-ml-1 sm:-ml-2 mb-10 mt-6 mx-auto pt-2 grid gap-x-3.5  sm:gap-x-5 gap-y-7 grid-cols-2 xs:grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
                         {allListings.map((listing, listingIndex: number) => (
                             <NavLink
                                 key={listingIndex}
                                 href={`/listings/${listing.listingId}`}
                             >
-                                <div className="group relative sm:px-1 w-40 md:w-48">
+                                <div className="group relative sm:px-1 w-40 md:w-48 ml-0.5">
                                     <div
                                         className="h-40 w-full overflow-hidden rounded-md bg-gray-200 aspect-square group-hover:opacity-90">
                                         {/* eslint-disable-next-line @next/next/no-img-element */}

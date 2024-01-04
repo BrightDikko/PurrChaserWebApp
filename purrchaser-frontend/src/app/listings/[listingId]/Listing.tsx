@@ -364,14 +364,14 @@ function SellerInformation() {
                     <div className="flex gap-3 mt-3">
                         <button
                             type="button"
-                            className="w-24 h-8 px-2 text-sm flex items-center justify-center rounded-md border border-transparent bg-indigo-600 font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50 bg-gradient-to-r from-indigo-700 to-indigo-600"
+                            className="w-24 h-8 px-2 text-sm flex items-center justify-center rounded-md border border-transparent bg-indigo-600 font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50 bg-gradient-to-r from-indigo-600 to-indigo-500"
                         >
                             See Profile
                         </button>
 
                         <button
                             type="button"
-                            className="w-24 h-8 px-2 text-sm flex items-center justify-center rounded-md border border-transparent bg-indigo-600 font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50 bg-gradient-to-r from-indigo-600 to-indigo-700"
+                            className="w-24 h-8 px-2 text-sm flex items-center justify-center rounded-md border border-transparent bg-indigo-600 font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50 bg-gradient-to-r from-indigo-600 to-indigo-500"
                         >
                             Connect
                         </button>
@@ -386,7 +386,7 @@ function ExploreSimilar() {
     return (
         <div className="flex justify-center px-6 py-5">
             <div
-                className="flex items-center justify-between gap-x-6 bg-gradient-to-r from-[#002f87] to-[#0c2340] px-6 rounded-xl py-3">
+                className="flex items-center justify-between gap-x-6 bg-gradient-to-r from-indigo-600 to-indigo-500 px-6 rounded-xl py-3">
                 <p className="text-sm leading-6 text-white text-center flex justify-center items-center">
                     <strong className="hidden xs:flex font-semibold"> This ain't what you want?</strong>
                     <svg viewBox="0 0 2 2" className="hidden xs:inline mx-2 h-0.5 w-0.5 fill-current"
