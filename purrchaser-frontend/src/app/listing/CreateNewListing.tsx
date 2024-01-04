@@ -4,7 +4,6 @@ import {CameraIcon, PhotoIcon, TrashIcon} from '@heroicons/react/24/solid'
 import {Container} from "@/components/shared/Container";
 import React, {useRef, useState} from "react";
 import Link from "next/link";
-import {useAppDispatch} from "@/hooks/store";
 import {getCurrentUser, useCreateNewListingMutation, useGetAllCategoriesQuery} from "@/store/services/api";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import {useRouter} from "next/navigation";
@@ -16,7 +15,6 @@ export default function CreateNewListing() {
 
 
     const [createNewListing, {isLoading: isLoadingNewListing, isError}] = useCreateNewListingMutation();
-    const dispatch = useAppDispatch();
     const currentUser = JSON.parse(getCurrentUser());
     const {data: categories, error, isLoading} = useGetAllCategoriesQuery();
 
@@ -87,9 +85,6 @@ export default function CreateNewListing() {
 
     const handleTertiaryCategoryChange = (event) => {
         setSelectedTertiary(event.target.value);
-        // console.log("\nselectedPrimary", categories.find(cat => cat.primaryCategoryId === parseInt(selectedPrimary)))
-        // console.log("\nselectedSecondary", categories.find(cat => cat.primaryCategoryId === parseInt(selectedPrimary)).secondaryCategories.find(cat => cat.secondaryCategoryId === parseInt(selectedSecondary)))
-        // console.log("\nselectedTertiary", categories.find(cat => cat.primaryCategoryId === parseInt(selectedPrimary)).secondaryCategories.find(cat => cat.secondaryCategoryId === parseInt(selectedSecondary)).tertiaryCategories.find(cat => cat.tertiaryCategoryId === parseInt(selectedTertiary)));
     };
 
     const handleBrandChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -210,7 +205,6 @@ export default function CreateNewListing() {
 
         try {
             const response = await createNewListing(formData).unwrap();
-            // console.log("\nresponse:", response)
             if (!!response) {
                 router.push('/');
             }
