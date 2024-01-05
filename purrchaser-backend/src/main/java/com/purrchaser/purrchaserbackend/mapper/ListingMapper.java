@@ -1,7 +1,9 @@
 package com.purrchaser.purrchaserbackend.mapper;
 
+import com.purrchaser.purrchaserbackend.domain.FavoriteListing;
 import com.purrchaser.purrchaserbackend.domain.Listing;
 import com.purrchaser.purrchaserbackend.dto.CreateListingRequest;
+import com.purrchaser.purrchaserbackend.dto.FavoriteListingDTO;
 import com.purrchaser.purrchaserbackend.dto.ImageDTO;
 import com.purrchaser.purrchaserbackend.dto.ListingDTO;
 import com.purrchaser.purrchaserbackend.dto.SellerDTO;
@@ -84,6 +86,14 @@ public class ListingMapper {
                 .images(otherImagesDTOs)
                 .category(tertiaryCategoryDTO)
                 .meetingLocation(listing.getMeetingLocation())
+                .build();
+    }
+
+    public FavoriteListingDTO convertToFavoriteListingDTO(FavoriteListing favoriteListing) {
+        return FavoriteListingDTO.builder()
+                .favoriteListingId(favoriteListing.getFavoriteListingId())
+                .userId(favoriteListing.getUser().getUserId())
+                .listingId(favoriteListing.getListing().getListingId())
                 .build();
     }
 
