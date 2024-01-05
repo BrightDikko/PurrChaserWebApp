@@ -1,14 +1,11 @@
 package com.purrchaser.purrchaserbackend.response.base;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.experimental.SuperBuilder;
 
-@Data
-@Builder
-@AllArgsConstructor
-public abstract class BaseResponse {
-    private boolean success;
-    private String message;
+@Getter
+@SuperBuilder
+public abstract class ApplicationResponse {
+    private final boolean success;
+    private final String message;
 }
