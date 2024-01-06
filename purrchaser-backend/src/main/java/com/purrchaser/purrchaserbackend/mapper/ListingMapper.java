@@ -92,8 +92,6 @@ public class ListingMapper {
     public FavoriteListingDTO convertToFavoriteListingDTO(FavoriteListing favoriteListing) {
         return FavoriteListingDTO.builder()
                 .favoriteListingId(favoriteListing.getFavoriteListingId())
-                .userId(favoriteListing.getUser().getUserId())
-                .listingId(favoriteListing.getListing().getListingId())
                 .build();
     }
 

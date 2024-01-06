@@ -7,10 +7,13 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/favorites")
@@ -35,6 +38,14 @@ public class FavoriteListingController {
     ) {
 
         GenericApplicationResponse<Void> response = favoriteListingService.removeListingFromFavorites(userId, listingId);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("all")
+    public ResponseEntity<GenericApplicationResponse<List<FavoriteListingDTO>>> getAllFavoritesListingsForUser(
+            @NotNull @RequestParam Integer userId
+    ) {
+        GenericApplicationResponse<List<FavoriteListingDTO>> response = favoriteListingService.getAllFavoritesListingsForUser(userId);
         return ResponseEntity.ok(response);
     }
 }

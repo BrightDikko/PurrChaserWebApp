@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -83,18 +84,32 @@ public class FavoriteListingServiceImpl implements FavoriteListingService {
         Optional<FavoriteListing> existingFavoriteListing = favoriteListingRepository.findByUser_UserIdAndListing_ListingId(userId, listingId);
 
         if (existingFavoriteListing.isPresent()) {
-            userRepository.findById(userId)
-                    .orElseThrow(() -> new ApiRequestException(USER_NOT_FOUND_MESSAGE, HttpStatus.NOT_FOUND));
-
-            listingRepository.findById(listingId)
-                    .orElseThrow(() -> new ApiRequestException(String.format(LISTING_NOT_FOUND_MESSAGE, listingId), HttpStatus.NOT_FOUND));
-
             favoriteListingRepository.delete(existingFavoriteListing.get());
 
             return ApplicationResponseBuilder.buildResponse(true, REMOVE_FROM_FAVORITES_SUCCESS_MESSAGE);
         } else {
             throw new ApiRequestException("No Favorite Listing exists for the provided userId and listingId", HttpStatus.NOT_FOUND);
         }
+    }
+
+
+    @Override
+    public GenericApplicationResponse<List<FavoriteListingDTO>> getAllFavoritesListingsForUser(Integer userId) {
+
+        userRepository.findById(userId)
+                .orElseThrow(() -> new ApiRequestException(USER_NOT_FOUND_MESSAGE, HttpStatus.NOT_FOUND));
+
+        // Retrieve all favorite listings for the user
+        List<FavoriteListing> favoriteListings = favoriteListingRepository.findByUser_UserId(userId);
+
+        // Wrap in GenericApplicationResponse and return
+        return ApplicationResponseBuilder.buildResponse(
+                true,
+                "Success",
+                favoriteListings,
+                listingMapper::convertToFavoriteListingDTO
+        );
+
     }
 
 }
