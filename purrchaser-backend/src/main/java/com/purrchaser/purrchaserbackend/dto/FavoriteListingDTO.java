@@ -12,6 +12,4 @@ import lombok.NoArgsConstructor;
 public class FavoriteListingDTO {
 
     private Integer favoriteListingId;
-    private Integer userId;
-    private Integer listingId;
 }

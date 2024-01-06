@@ -2,6 +2,9 @@ package com.purrchaser.purrchaserbackend.utils;
 
 import com.purrchaser.purrchaserbackend.response.GenericApplicationResponse;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class ApplicationResponseBuilder {
 
     public static <R> GenericApplicationResponse<R> buildResponse(
@@ -29,6 +32,23 @@ public class ApplicationResponseBuilder {
                 .success(success)
                 .message(message)
                 .data(dto)
+                .build();
+    }
+
+    public static <T, R> GenericApplicationResponse<List<R>> buildResponse(
+            boolean success,
+            String message,
+            List<T> entities,
+            EntityMapper<T, R> mapper
+    ) {
+        List<R> dtos = entities.stream()
+                .map(mapper::map)
+                .collect(Collectors.toList());
+
+        return GenericApplicationResponse.<List<R>>builder()
+                .success(success)
+                .message(message)
+                .data(dtos)
                 .build();
     }
 }
