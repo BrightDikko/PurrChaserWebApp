@@ -6,6 +6,7 @@ import com.purrchaser.purrchaserbackend.service.FavoriteListingService;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,6 +25,16 @@ public class FavoriteListingController {
     ) {
 
         GenericApplicationResponse<FavoriteListingDTO> response = favoriteListingService.addListingToFavorites(userId, listingId);
+        return ResponseEntity.ok(response);
+    }
+    
+    @DeleteMapping
+    public ResponseEntity<GenericApplicationResponse<Void>> removeListingFromFavorites(
+            @NotNull @RequestParam Integer userId,
+            @NotNull @RequestParam Integer listingId
+    ) {
+
+        GenericApplicationResponse<Void> response = favoriteListingService.removeListingFromFavorites(userId, listingId);
         return ResponseEntity.ok(response);
     }
 }

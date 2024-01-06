@@ -28,14 +28,18 @@ public class FavoriteListingServiceImpl implements FavoriteListingService {
     private final ListingRepository listingRepository;
     private final ListingMapper listingMapper;
 
+    private final String ADD_TO_FAVORITES_SUCCESS_MESSAGE = "The listing was successfully added to the user's favorites.";
+    private final String REMOVE_FROM_FAVORITES_SUCCESS_MESSAGE = "The listing was successfully removed from the user's favorites.";
+    private final String USER_NOT_FOUND_MESSAGE = "User not found";
+    private final String LISTING_NOT_FOUND_MESSAGE = "Listing with ID - %s was not found: ";
+
     @Override
-    public GenericApplicationResponse<FavoriteListingDTO> addListingToFavorites(Integer userId, Integer listingId) {
+    public GenericApplicationResponse<FavoriteListingDTO> addListingToFavorites(
+            Integer userId,
+            Integer listingId
+    ) {
         // Check if the listing is already in the user's favorites
         Optional<FavoriteListing> existingFavoriteListing = favoriteListingRepository.findByUser_UserIdAndListing_ListingId(userId, listingId);
-
-        String ADD_TO_FAVORITES_SUCCESS_MESSAGE = "The listing was successfully added to the user's favorites.";
-        String USER_NOT_FOUND_MESSAGE = "User not found";
-        String LISTING_NOT_FOUND_MESSAGE = String.format("Listing with ID - %s was not found: ", listingId);
 
         if (existingFavoriteListing.isPresent()) {
             // If already in user's favorites, return the existing record
@@ -51,7 +55,7 @@ public class FavoriteListingServiceImpl implements FavoriteListingService {
                     .orElseThrow(() -> new ApiRequestException(USER_NOT_FOUND_MESSAGE, HttpStatus.NOT_FOUND));
 
             Listing listing = listingRepository.findById(listingId)
-                    .orElseThrow(() -> new ApiRequestException(LISTING_NOT_FOUND_MESSAGE, HttpStatus.NOT_FOUND));
+                    .orElseThrow(() -> new ApiRequestException(String.format(LISTING_NOT_FOUND_MESSAGE, listingId), HttpStatus.NOT_FOUND));
 
 
             FavoriteListing newFavoriteListing = favoriteListingRepository.save(
@@ -66,6 +70,30 @@ public class FavoriteListingServiceImpl implements FavoriteListingService {
                     ADD_TO_FAVORITES_SUCCESS_MESSAGE,
                     newFavoriteListing,
                     listingMapper::convertToFavoriteListingDTO);
+        }
+    }
+
+
+    @Override
+    public GenericApplicationResponse<Void> removeListingFromFavorites(
+            Integer userId,
+            Integer listingId
+    ) {
+
+        Optional<FavoriteListing> existingFavoriteListing = favoriteListingRepository.findByUser_UserIdAndListing_ListingId(userId, listingId);
+
+        if (existingFavoriteListing.isPresent()) {
+            userRepository.findById(userId)
+                    .orElseThrow(() -> new ApiRequestException(USER_NOT_FOUND_MESSAGE, HttpStatus.NOT_FOUND));
+
+            listingRepository.findById(listingId)
+                    .orElseThrow(() -> new ApiRequestException(String.format(LISTING_NOT_FOUND_MESSAGE, listingId), HttpStatus.NOT_FOUND));
+
+            favoriteListingRepository.delete(existingFavoriteListing.get());
+
+            return ApplicationResponseBuilder.buildResponse(true, REMOVE_FROM_FAVORITES_SUCCESS_MESSAGE);
+        } else {
+            throw new ApiRequestException("No Favorite Listing exists for the provided userId and listingId", HttpStatus.NOT_FOUND);
         }
     }
 
