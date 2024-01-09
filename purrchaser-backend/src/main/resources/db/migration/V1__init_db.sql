@@ -142,3 +142,13 @@ CREATE TABLE favorite_listings (
     FOREIGN KEY (user_id) REFERENCES users (user_id),
     FOREIGN KEY (listing_id) REFERENCES listings (listing_id)
 );
+
+CREATE TABLE carts (
+    cart_id CHAR(36) NOT NULL PRIMARY KEY,
+    user_id INT NOT NULL,
+    listing_id INT NOT NULL,
+    quantity INT DEFAULT 1,
+    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users (user_id),
+    FOREIGN KEY (listing_id) REFERENCES listings (listing_id)
+);

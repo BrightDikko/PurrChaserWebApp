@@ -11,7 +11,6 @@ import com.purrchaser.purrchaserbackend.repository.ListingRepository;
 import com.purrchaser.purrchaserbackend.repository.TertiaryCategoryRepository;
 import com.purrchaser.purrchaserbackend.repository.UserRepository;
 import com.purrchaser.purrchaserbackend.service.ListingService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,7 +38,7 @@ public class ListingServiceImpl implements ListingService {
     @Override
     public Listing getListingById(Integer listingId) {
         return listingRepository.findById(listingId)
-                .orElseThrow(() -> new EntityNotFoundException("Listing not found with ID: " + listingId));
+                .orElseThrow(() -> new ApiRequestException(("Listing not found with ID: " + listingId), HttpStatus.NOT_FOUND));
     }
 
     @Override
