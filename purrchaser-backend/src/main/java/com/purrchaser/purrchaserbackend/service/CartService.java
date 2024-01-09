@@ -1,2 +1,10 @@
-package com.purrchaser.purrchaserbackend.service;public interface CartService {
-}
+package com.purrchaser.purrchaserbackend.service;
+
+import com.purrchaser.purrchaserbackend.dto.CartDTO;
+import com.purrchaser.purrchaserbackend.response.GenericApplicationResponse;
+
+public interface CartService {
+
+    GenericApplicationResponse<CartDTO> addListingToUserCart(Integer userId, Integer listingId);
+
+    }
