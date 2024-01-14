@@ -18,11 +18,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import static com.purrchaser.purrchaserbackend.constants.ErrorMessage.CART_ITEM_NOT_FOUND_MESSAGE;
 import static com.purrchaser.purrchaserbackend.constants.SuccessMessage.ADD_TO_CART_SUCCESS_MESSAGE;
+import static com.purrchaser.purrchaserbackend.constants.SuccessMessage.GET_ALL_CART_ITEMS_SUCCESS_MESSAGE;
 import static com.purrchaser.purrchaserbackend.constants.SuccessMessage.REMOVE_FROM_CART_SUCCESS_MESSAGE;
 
 @Service
@@ -90,5 +92,19 @@ public class CartServiceImpl implements CartService {
         } else {
             throw new ApiRequestException(CART_ITEM_NOT_FOUND_MESSAGE, HttpStatus.NOT_FOUND);
         }
+    }
+
+    @Override
+    public GenericApplicationResponse<List<CartDTO>> getAllListingsInUserCart(Integer userId) {
+        ApplicationUser user = userService.getApplicationUserById(userId);
+
+        List<Cart> allListings = cartRepository.findByUser(user);
+
+        return ApplicationResponseBuilder.buildResponse(
+                true,
+                GET_ALL_CART_ITEMS_SUCCESS_MESSAGE,
+                allListings,
+                cartMapper::convertToCartDTO
+        );
     }
 }
