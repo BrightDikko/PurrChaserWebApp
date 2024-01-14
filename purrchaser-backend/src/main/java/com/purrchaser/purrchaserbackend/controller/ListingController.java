@@ -29,15 +29,19 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static com.purrchaser.purrchaserbackend.constants.PathConstants.ALL;
+import static com.purrchaser.purrchaserbackend.constants.PathConstants.LISTINGS;
+import static com.purrchaser.purrchaserbackend.constants.PathConstants.LISTING_ID_PATH_VARIABLES;
+
 @RestController
-@RequestMapping("/listings")
+@RequestMapping(LISTINGS)
 @RequiredArgsConstructor
 public class ListingController {
     private final ListingMapper listingMapper;
     private final S3Service s3Service;
     private final S3Buckets s3Buckets;
 
-    @GetMapping("/all")
+    @GetMapping(ALL)
     public ResponseEntity<Page<ListingDTO>> getAllListings(@PageableDefault(size = 24)
                                                            @SortDefault.SortDefaults({
                                                                    @SortDefault(
@@ -49,10 +53,10 @@ public class ListingController {
         return ResponseEntity.ok(listingMapper.getAllListings(pageable));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ListingDTO> getListingById(@PathVariable Integer id) {
-        System.out.println("Received request to getListingById. id: " + id);
-        ListingDTO listingDTO = listingMapper.getListingById(id);
+    @GetMapping(LISTING_ID_PATH_VARIABLES)
+    public ResponseEntity<ListingDTO> getListingById(@PathVariable Integer listingId) {
+        System.out.println("Received request to getListingById. listingId: " + listingId);
+        ListingDTO listingDTO = listingMapper.getListingById(listingId);
         if (listingDTO == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
