@@ -101,7 +101,7 @@ export const api = createApi({
 
         getListingById: builder.query({
             query: (id) => ({
-                url: `/listings/${id}`,
+                url: `/listings/listing/${id}`,
                 method: "GET"
             })
         }),

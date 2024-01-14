@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static com.purrchaser.purrchaserbackend.constants.PathConstants.CATEGORIES;
+
 @RestController
-@RequestMapping("/categories")
+@RequestMapping(CATEGORIES)
 @RequiredArgsConstructor
 public class CategoriesController {
     private final CategoryMapper categoryMapper;

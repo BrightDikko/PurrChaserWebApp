@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static com.purrchaser.purrchaserbackend.constants.PathConstants.SCHOOLS;
+
 @RestController
-@RequestMapping("/schools")
+@RequestMapping(SCHOOLS)
 @RequiredArgsConstructor
 public class SchoolsController {
     private final SchoolMapper schoolMapper;

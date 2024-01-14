@@ -16,8 +16,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.purrchaser.purrchaserbackend.constants.PathConstants.AUTH;
+import static com.purrchaser.purrchaserbackend.constants.PathConstants.LOGIN;
+import static com.purrchaser.purrchaserbackend.constants.PathConstants.REGISTER;
+
 @RestController
-@RequestMapping("/auth")
+@RequestMapping(AUTH)
 @RequiredArgsConstructor
 public class AuthenticationController {
 
@@ -33,13 +37,13 @@ public class AuthenticationController {
         return new ResponseEntity<String>("The user you are looking for does not exist", HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping("/register")
+    @PostMapping(REGISTER)
     public ApplicationUser registerUser(@RequestBody RegistrationRequest registrationRequest) {
         System.out.println("Request to register user received. \nRequest: " + registrationRequest);
         return authenticationService.registerUser(registrationRequest);
     }
 
-    @PostMapping("/login")
+    @PostMapping(LOGIN)
     public LoginResponse loginUser(@RequestBody LoginRequest loginRequest) {
         System.out.println("Request to log in user received. \nRequest: " + loginRequest);
         return authenticationService.loginUser(loginRequest);

@@ -20,6 +20,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static com.purrchaser.purrchaserbackend.constants.ErrorMessage.LISTING_NOT_FOUND_MESSAGE;
+import static com.purrchaser.purrchaserbackend.constants.ErrorMessage.USER_NOT_FOUND_MESSAGE;
+import static com.purrchaser.purrchaserbackend.constants.SuccessMessage.ADD_TO_FAVORITES_SUCCESS_MESSAGE;
+import static com.purrchaser.purrchaserbackend.constants.SuccessMessage.GET_ALL_FAVORITES_SUCCESS_MESSAGE;
+import static com.purrchaser.purrchaserbackend.constants.SuccessMessage.REMOVE_FROM_FAVORITES_SUCCESS_MESSAGE;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -28,11 +34,6 @@ public class FavoriteListingServiceImpl implements FavoriteListingService {
     private final UserRepository userRepository;
     private final ListingRepository listingRepository;
     private final ListingMapper listingMapper;
-
-    private final String ADD_TO_FAVORITES_SUCCESS_MESSAGE = "The listing was successfully added to the user's favorites.";
-    private final String REMOVE_FROM_FAVORITES_SUCCESS_MESSAGE = "The listing was successfully removed from the user's favorites.";
-    private final String USER_NOT_FOUND_MESSAGE = "User not found";
-    private final String LISTING_NOT_FOUND_MESSAGE = "Listing with ID - %s was not found: ";
 
     @Override
     public GenericApplicationResponse<FavoriteListingDTO> addListingToFavorites(
@@ -105,7 +106,7 @@ public class FavoriteListingServiceImpl implements FavoriteListingService {
         // Wrap in GenericApplicationResponse and return
         return ApplicationResponseBuilder.buildResponse(
                 true,
-                "Success",
+                GET_ALL_FAVORITES_SUCCESS_MESSAGE,
                 favoriteListings,
                 listingMapper::convertToFavoriteListingDTO
         );

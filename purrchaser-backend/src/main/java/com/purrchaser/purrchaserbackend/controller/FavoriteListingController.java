@@ -15,8 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static com.purrchaser.purrchaserbackend.constants.PathConstants.ALL;
+import static com.purrchaser.purrchaserbackend.constants.PathConstants.FAVORITES;
+
 @RestController
-@RequestMapping("/favorites")
+@RequestMapping(FAVORITES)
 @RequiredArgsConstructor
 public class FavoriteListingController {
     private final FavoriteListingService favoriteListingService;
@@ -41,7 +44,7 @@ public class FavoriteListingController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("all")
+    @GetMapping(ALL)
     public ResponseEntity<GenericApplicationResponse<List<FavoriteListingDTO>>> getAllFavoritesListingsForUser(
             @NotNull @RequestParam Integer userId
     ) {
