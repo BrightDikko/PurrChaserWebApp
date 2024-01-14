@@ -7,4 +7,5 @@ public interface CartService {
 
     GenericApplicationResponse<CartDTO> addListingToUserCart(Integer userId, Integer listingId);
 
-    }
+    GenericApplicationResponse<Void> removeListingFromUserCart(Integer userId, Integer listingId);
+}
