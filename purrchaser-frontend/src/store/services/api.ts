@@ -92,6 +92,14 @@ export const api = createApi({
             keepUnusedDataFor: 60 * 60 * 24  // 24 hours in seconds, specific to this endpoint
         }),
 
+        createNewListing: builder.mutation({
+            query: (newListing) => ({
+                url: "/listings",
+                method: "POST",
+                body: newListing,
+            })
+        }),
+
         getAllListings: builder.query({
             query: ({ page = 0, size = 24 }) => ({
                 url: `/listings/all?page=${page}&size=${size}`,
@@ -106,11 +114,10 @@ export const api = createApi({
             })
         }),
 
-        createNewListing: builder.mutation({
-            query: (newListing) => ({
-                url: "/listings",
-                method: "POST",
-                body: newListing,
+        addListingToCart: builder.mutation({
+            query: ({userId, listingId}) => ({
+                url: `/cart/user/${userId}/listing/${listingId}`,
+                method: "POST"
             })
         })
     }),
@@ -121,7 +128,8 @@ export const {
     useLoginMutation,
     useGetAllSchoolsQuery,
     useGetAllCategoriesQuery,
+    useCreateNewListingMutation,
     useGetAllListingsQuery,
     useGetListingByIdQuery,
-    useCreateNewListingMutation
+    useAddListingToCartMutation
 } = api;
