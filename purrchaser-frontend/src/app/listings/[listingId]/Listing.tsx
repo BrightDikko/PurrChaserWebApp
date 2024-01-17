@@ -4,7 +4,7 @@ import React, {useEffect, useState} from "react";
 import {useAppSelector} from "@/hooks/store";
 import {Disclosure, Tab} from '@headlessui/react'
 import {BanknotesIcon, HeartIcon, MinusIcon, PlusIcon, ShoppingCartIcon} from '@heroicons/react/24/outline'
-import {useGetListingByIdQuery} from "@/store/services/api";
+import {getCurrentUser, useAddListingToCartMutation, useGetListingByIdQuery} from "@/store/services/api";
 import {formatCategoryNameLikeInHrefSlug} from "@/store/slices/categoriesSlice";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import {CheckBadgeIcon} from "@heroicons/react/20/solid";
@@ -40,6 +40,7 @@ const ListingPage: React.FC<CategoryProps> = ({listingId}) => {
     // console.log("\n categoryPaths:", categoryPaths);
 
     const {data: currentListing, isLoading, isError} = useGetListingByIdQuery(parseInt(listingId));
+    const [addListingToCart, {isLoading: addListingToCartIsLoading, isError: addListingToCartError, data: addListingToCartData}] = useAddListingToCartMutation();
 
     // State to track if all images are loaded
     const [imagesLoaded, setImagesLoaded] = useState(false);
@@ -107,6 +108,23 @@ const ListingPage: React.FC<CategoryProps> = ({listingId}) => {
             }
         }
     ];
+
+    const handleAddToCart = async () => {
+        console.log("Add to cart button pressed!");
+
+        const currentUser = JSON.parse(getCurrentUser());
+        const userId = currentUser?.userId;
+
+        try {
+            const addListingToCartResponse = await addListingToCart({userId, listingId});
+            if (!!addListingToCartResponse) {
+                console.log("\naddListingToCartResponse", addListingToCartResponse);
+            }
+        } catch (error) {
+            console.error("An error occurred while attempting to add listing to user cart. Error: ", error);
+        }
+
+    }
 
     return (
         <div className="bg-white">
@@ -201,14 +219,15 @@ const ListingPage: React.FC<CategoryProps> = ({listingId}) => {
 
                             <div className="mt-10 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
                                 <button
-                                    type="submit"
+                                    type="button"
+                                    onClick={handleAddToCart}
                                     className="flex max-w-full sm:max-w-xs flex-1 items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full bg-gradient-to-r from-indigo-600 to-indigo-500"
                                 >
-                                    <span><ShoppingCartIcon className="h-5 w-5 mr-2"/></span>Add to cart
+                                    <span><ShoppingCartIcon className="h-5 w-5 mr-2"/></span>{addListingToCartIsLoading ? "Adding to cart" : addListingToCartData ? "Go to cart" : "Add to cart"}
                                 </button>
 
                                 <button
-                                    type="submit"
+                                    type="button"
                                     className="flex max-w-full sm:max-w-xs flex-1 items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full bg-gradient-to-r from-indigo-600 to-indigo-500"
                                 >
                                     <span><BanknotesIcon className="h-5 w-5 mr-2"/></span>Negotiate
