@@ -58,7 +58,7 @@ const baseQueryWithRetry = retry(baseQuery, {maxRetries: 2});
 export const api = createApi({
     reducerPath: 'mainApi',
     baseQuery: baseQueryWithRetry,
-    tagTypes: [],
+    tagTypes: ['Cart'],
     endpoints: (builder) => ({
         register: builder.mutation<UserResponse, RegisterRequest>({
             query: (credentials) => ({
@@ -122,7 +122,16 @@ export const api = createApi({
             query: ({userId, listingId}) => ({
                 url: `/cart/user/${userId}/listing/${listingId}`,
                 method: "POST"
-            })
+            }),
+            invalidatesTags: ['Cart'],
+        }),
+
+        getAllListingsInCart: builder.query({
+            query: ({userId}) => ({
+                url: `/cart/all?userId=${userId}`,
+                method: "GET"
+            }),
+            providesTags: ['Cart'],
         })
     }),
 })
@@ -135,5 +144,6 @@ export const {
     useCreateNewListingMutation,
     useGetAllListingsQuery,
     useGetListingByIdQuery,
-    useAddListingToCartMutation
+    useAddListingToCartMutation,
+    useGetAllListingsInCartQuery
 } = api;
