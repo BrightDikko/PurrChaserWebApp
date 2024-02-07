@@ -4,7 +4,12 @@ import React, {useEffect, useState} from "react";
 import {useAppSelector} from "@/hooks/store";
 import {Disclosure, Tab} from '@headlessui/react'
 import {BanknotesIcon, HeartIcon, MinusIcon, PlusIcon, ShoppingCartIcon} from '@heroicons/react/24/outline'
-import {getCurrentUser, useAddListingToCartMutation, useGetListingByIdQuery} from "@/store/services/api";
+import {
+    getCurrentUser,
+    useAddListingToCartMutation,
+    useGetAllListingsInCartQuery,
+    useGetListingByIdQuery
+} from "@/store/services/api";
 import {formatCategoryNameLikeInHrefSlug} from "@/store/slices/categoriesSlice";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import {CheckBadgeIcon} from "@heroicons/react/20/solid";
@@ -42,8 +47,17 @@ const ListingPage: React.FC<CategoryProps> = ({listingId}) => {
     const {data: currentListing, isLoading, isError} = useGetListingByIdQuery(parseInt(listingId));
     const [addListingToCart, {isLoading: addListingToCartIsLoading, isError: addListingToCartError, data: addListingToCartData}] = useAddListingToCartMutation();
 
+    const {data: userCart, error: getAllListingsInCartError, isLoading: getAllListingsInCartIsLoading} = useGetAllListingsInCartQuery({userId: JSON.parse(getCurrentUser())?.userId});
+
     // State to track if all images are loaded
     const [imagesLoaded, setImagesLoaded] = useState(false);
+
+    const [isListingAlreadyInCart, setIsListingAlreadyInCart] = useState(false);
+
+    useEffect(() => {
+        const listingIsInCart = userCart?.data.some((item) => item.listing.listingId === parseInt(listingId));
+        setIsListingAlreadyInCart(!!(listingIsInCart));
+    }, [listingId, userCart]);
 
     useEffect(() => {
         if (currentListing) {
@@ -67,7 +81,7 @@ const ListingPage: React.FC<CategoryProps> = ({listingId}) => {
     }, [currentListing]);
 
     // Show loading spinner until listing data and images are loaded
-    if (isLoading || !imagesLoaded) {
+    if (isLoading || getAllListingsInCartIsLoading || !imagesLoaded) {
         return <LoadingSpinner/>;
     }
 
@@ -75,6 +89,11 @@ const ListingPage: React.FC<CategoryProps> = ({listingId}) => {
     if (isError) {
         console.error("Error occurred while loading the listing. Error: ", isError);
         return; // Return error message or component
+    }
+
+    if (getAllListingsInCartError) {
+        console.error("Error occurred while fetching user cart. Error: ", getAllListingsInCartError);
+        return;
     }
 
     // Preparing data for rendering
@@ -223,7 +242,7 @@ const ListingPage: React.FC<CategoryProps> = ({listingId}) => {
                                     onClick={handleAddToCart}
                                     className="flex max-w-full sm:max-w-xs flex-1 items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full bg-gradient-to-r from-indigo-600 to-indigo-500"
                                 >
-                                    <span><ShoppingCartIcon className="h-5 w-5 mr-2"/></span>{addListingToCartIsLoading ? "Adding to cart" : addListingToCartData ? "Go to cart" : "Add to cart"}
+                                    <span><ShoppingCartIcon className="h-5 w-5 mr-2"/></span>{isListingAlreadyInCart ? "Go to cart" : addListingToCartIsLoading ? "Adding to cart" : addListingToCartData ? "Go to cart" : "Add to cart"}
                                 </button>
 
                                 <button
