@@ -42,7 +42,7 @@ export const getCurrentUser = () => {
 }
 
 const baseQuery = fetchBaseQuery({
-    baseUrl: 'http://10.31.118.77:8000',
+    baseUrl: 'http://localhost:8000',
     prepareHeaders: (headers) => {
         const token = localStorage.getItem("token");
         // const token = null;
@@ -69,11 +69,15 @@ export const api = createApi({
         }),
 
         login: builder.mutation<UserResponse, LoginRequest>({
-            query: (credentials) => ({
-                url: "/auth/login",
-                method: "POST",
-                body: credentials
-            })
+            query: (credentials) => {
+                console.log("Logging in");
+
+                return {
+                    url: "/auth/login",
+                    method: "POST",
+                    body: credentials
+                }
+            }
         }),
 
         getAllSchools: builder.query<AllSchools, void>({
